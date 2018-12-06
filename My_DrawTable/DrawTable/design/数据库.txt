@@ -1,0 +1,56 @@
+数据库 Kshine.db  
+表1    tb_place
+表2    tb_car
+表3    tb_ticket
+
+
+
+
+
+例子：
+create table if not exists tb_ur(
+account  integer primary key autoincrement,
+gender   text not null,
+nickname text not null,
+password text not null,
+levelscore integer,
+myroomid integer,
+myphone integer,
+mywallet integer
+);
+
+表1：
+create table if not exists tb_place(
+keynumber  integer primary key autoincrement,
+placename  text not null,
+placeman   text,
+telephone  text
+);
+
+表2：
+
+create table if not exists tb_car(
+carnumber  text primary key not null,
+dirver     text,
+carweight     double not null,
+telephone  text
+);
+
+表3：
+
+create table if not exists tb_ticket(
+ticnumber  text primary key not null,
+placename  text,
+carnumber  text,
+totalweight double,
+carweight  double,
+thingsweight double,
+price    double,
+year   integer,
+month	integer,
+day	integer,
+receiver text,
+dirver text,
+watcher text
+
+);
