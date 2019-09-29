@@ -34,7 +34,7 @@ void QIR_PIC::paintEvent(QPaintEvent *ev)
     painter.drawPixmap(0,0,thisWidth,thisHeight,pix);
 
     QPixmap ppix;
-    ppix.load("C:/Users/Administrator/Desktop/kz2.png");
+    ppix.load("E:/fat.png");
     painter.drawPixmap(0,0,ppix.width(),ppix.height(),ppix);
 
 }

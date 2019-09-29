@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include "HomePage/homepagewindow.h"
-#include "AnalzyPage/analzypagewindow.h"
+#include "AnalzyPage_V2/analzypage_v2.h"
 #include "AddPage/addpagewindow.h"
 #include "UserPage/userpage.h"
 #include "Quality_inspection_reportPage/qualitypage.h"
@@ -26,7 +26,7 @@ public slots:
     void slot_quitButton();
     //创建哥功能界面
     void create_HomePageWindow();
-    void create_AnalzyPageWindow();
+    void create_AnalzyPageWindow_V2();
     void create_AddPageWindow();
     void create_UserPageWindow();
     void create_QualityPageWindow();
@@ -46,11 +46,11 @@ private:
    QPushButton* quality_Button;
 
    HomePageWindow* HomeWindow;
-   AnalzyPageWindow* AnalzyWindow;
+   //AnalzyPageWindow* AnalzyWindow;
    AddPageWindow* Addwindow;
    UserPage*      Usermanagerwindow;
    QualityPage* QualityWindow;
-
+   AnalzyPage_V2* AnalzyWindow_V2;
    QDockWidget* DockWindow;//左侧工具条
    QWidget* UserWindow; //右侧
 

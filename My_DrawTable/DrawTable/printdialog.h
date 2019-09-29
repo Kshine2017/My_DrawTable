@@ -15,6 +15,7 @@ public:
     PrintDialog(const QStringList &str, QWidget* parent=0);
     ~PrintDialog();
     QLabel* lb_number;
+    QLabel* lb_thingstype;
     QLabel* lb_placename;
     QLabel* lb_receiver;
     QLabel* lb_carnumber;
@@ -27,6 +28,7 @@ public:
     QLabel* lb_watcher;
     QLabel* lb_type;
     QLineEdit* le_number;
+    QLineEdit* le_thingstype;
     QLineEdit* le_placename;
     QLineEdit* le_receiver;
     QLineEdit* le_carnumber;
@@ -65,6 +67,7 @@ public slots:
     void slot_delete();
     void slot_update();
     void slot_print();
+    void slot_calculate_weight();
 };
 
 #endif // PRINTDIALOG_H

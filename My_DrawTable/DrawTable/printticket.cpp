@@ -43,10 +43,9 @@ bool PrintTicket::print()
         if(recordflag!="丢失补印")//丢失补印不需要再次写入数据（当然写也写不进去）
         {
             RecordDaoImp op;
-            op.insertRecordInfo(number,placename,receiver,carnumber,dirver,ticketTime,originalTime,watcher,"无","无",totalweight,carweight,thingsweight,price,recordflag);
+            //op.insertRecordInfo(number,placename,receiver,carnumber,dirver,ticketTime,originalTime,watcher,"无","无",totalweight,carweight,thingsweight,price,recordflag);
+            op.insertRecordInfo_v3(number,type,placename,receiver,carnumber,dirver,ticketTime,originalTime,watcher,"无","无",totalweight,carweight,thingsweight,price,recordflag);
         }
-
-
     }
     return true;
 }

@@ -62,5 +62,6 @@
         <file>picture/set-up.png</file>
         <file>picture/type-down.png</file>
         <file>picture/type-up.png</file>
+        <file>picture/table_back_blue.png</file>
     </qresource>
 </RCC>

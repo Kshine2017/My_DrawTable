@@ -145,7 +145,7 @@ void MainWindow::Init_button()
   if(user_status ==status2 ||user_status ==status3 ||user_status == status4 ||user_status == status5)
     {
         analzePage_Button   = new QPushButton(DockWindow);
-        connect(analzePage_Button,SIGNAL(clicked()),this,SLOT(create_AnalzyPageWindow()));
+        connect(analzePage_Button,SIGNAL(clicked()),this,SLOT(create_AnalzyPageWindow_V2()));
         analzePage_Button->setFlat(true);
         analzePage_Button->setFocusPolicy(Qt::TabFocus);
         analzePage_Button->setFixedSize(160,30);//图片的固定大小85 32
@@ -183,7 +183,7 @@ void MainWindow::Init_button()
     }
 
   //仅超级和管理员
- if(user_status == status4 ||user_status == status5)
+ if(user_status == status5)
      {
         userpage_Button     = new QPushButton(DockWindow);
         connect(userpage_Button,SIGNAL(clicked()),this,SLOT(create_UserPageWindow()));
@@ -195,9 +195,9 @@ void MainWindow::Init_button()
                                        "QPushButton:pressed{border-image: url(:/picture/userwindow-down.png);}");
         btn_layout->addWidget(userpage_Button);
     }
-
+#if 0
          //暂定所有
-        if(1)
+        if(user_status == status5)
             {
                quality_Button     = new QPushButton(DockWindow);
                connect(quality_Button,SIGNAL(clicked()),this,SLOT(create_QualityPageWindow()));
@@ -209,7 +209,7 @@ void MainWindow::Init_button()
                                               "QPushButton:pressed{border-image: url(:/picture/Kshine.png);}");
                btn_layout->addWidget(quality_Button);
            }
-
+#endif
     btn_layout->setGeometry(QRect(20,100,185,250));
 }
 
@@ -281,30 +281,6 @@ void MainWindow::create_HomePageWindow()
 
 }
 
-void MainWindow::create_AnalzyPageWindow()
-{
-    //    QMessageBox* msg =new QMessageBox(this);
-    //    msg->setText("  进入分析页面    ");
-    //    msg->setWindowTitle("提示框：");
-    //   //msg->setStandardButtons(QMessageBox::Ok);
-    //    msg->setButtonText(1,"知道了！");
-    //    msg->setStyleSheet(
-    //                    "QMessageBox {  "
-    //                    "font-family:宋体;font-size:18px;"
-    //                    "border-image:url(:/picture/information.jpg);"
-    //                    "}"
-    //                        );
-    //    msg->exec();
-
-    if(Page_flag!=2)
-    {
-        Page_flag=2;
-        AnalzyWindow =new AnalzyPageWindow(this);
-        AnalzyWindow->setWindowFlags(Qt::FramelessWindowHint);
-        this->setCentralWidget(AnalzyWindow);
-    }
-}
-
 void MainWindow::create_AddPageWindow()
 {
     //    QMessageBox* msg =new QMessageBox(this);
@@ -350,6 +326,16 @@ void MainWindow::create_QualityPageWindow()
     }
 }
 
+void MainWindow::create_AnalzyPageWindow_V2()
+{
+    if(Page_flag!=6)
+    {
+        Page_flag=6;
+        AnalzyWindow_V2 =new AnalzyPage_V2(this);
+        AnalzyWindow_V2->setWindowFlags(Qt::FramelessWindowHint);
+        this->setCentralWidget(AnalzyWindow_V2);
+    }
+}
 void MainWindow::getUserInfo_ini_File()
 {
 

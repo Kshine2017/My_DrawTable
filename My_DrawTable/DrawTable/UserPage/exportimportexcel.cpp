@@ -254,8 +254,10 @@ void ExportImportExcel::DATAtoExcel(QAxObject *work_book)
         for(int j=0;j<columnNumber;j++)
         {
             cell = third_sheet->querySubObject("Cells(int,int)", i+2, j+1);
-            cell->setProperty("Value", model.data(model.index(i,j)));
+            cell->setProperty("Value", model.data(model.index(i,j)).toString());
             cell->dynamicCall("SetValue(const QVariant&)",model.data(model.index(i,j)));
+
+
         }
     qDebug()<<"已完成第三页表格数据";
 

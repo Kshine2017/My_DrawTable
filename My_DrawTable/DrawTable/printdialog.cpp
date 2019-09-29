@@ -24,7 +24,9 @@ PrintDialog::~PrintDialog()
 
 void PrintDialog::init_lb_le()
 {
-    lb_number = new QLabel(this);lb_number->setText("流 水 号：");
+    //lb_number = new QLabel(this);lb_number->setText("流 水 号：");
+//------------------------------------------------------------------
+    lb_thingstype = new QLabel(this);lb_thingstype->setText("品    类：");
     lb_placename = new QLabel(this);lb_placename->setText("场地名称：");
 
     lb_receiver = new QLabel(this);lb_receiver->setText("收 货 人：");
@@ -43,19 +45,22 @@ void PrintDialog::init_lb_le()
     lb_type = new QLabel(this);lb_type->setText("单据类型：");
 
     le_number = new QLineEdit(this);le_number->setEnabled(false);
+    //---------------------------------------------------------
+    le_thingstype   = new QLineEdit(this);
     le_placename = new QLineEdit(this);
     le_receiver = new QLineEdit(this);
     le_carnumber = new QLineEdit(this);
     le_dirver = new QLineEdit(this);
-    le_totalWeight = new QLineEdit(this);
-    le_carweight = new QLineEdit(this);
-    le_thingsweight = new QLineEdit(this);
+    le_totalWeight = new QLineEdit(this);connect(le_totalWeight,SIGNAL(editingFinished()),this,SLOT(slot_calculate_weight()));
+    le_carweight = new QLineEdit(this);connect(le_carweight,SIGNAL(editingFinished()),this,SLOT(slot_calculate_weight()));
+    le_thingsweight = new QLineEdit(this);le_thingsweight->setEnabled(false);
     le_price = new QLineEdit(this);
     le_time = new QLineEdit(this);le_time->setEnabled(false);
     le_watcher = new QLineEdit(this);
     le_type = new QLineEdit(this);le_type->setEnabled(false);
 
-    lh_1 = new QHBoxLayout();lh_1->addWidget(lb_number);lh_1->addWidget(le_number);lh_1->addWidget(lb_placename);lh_1->addWidget(le_placename);
+
+    lh_1 = new QHBoxLayout();lh_1->addWidget(lb_thingstype);lh_1->addWidget(le_thingstype);lh_1->addWidget(lb_placename);lh_1->addWidget(le_placename);
     lh_2 = new QHBoxLayout();lh_2->addWidget(lb_receiver);lh_2->addWidget(le_receiver);lh_2->addWidget(lb_carnumber);lh_2->addWidget(le_carnumber);
     lh_3 = new QHBoxLayout();lh_3->addWidget(lb_dirver);lh_3->addWidget(le_dirver);lh_3->addWidget(lb_totalWeight);lh_3->addWidget(le_totalWeight);
     lh_4 = new QHBoxLayout();lh_4->addWidget(lb_carweight);lh_4->addWidget(le_carweight);lh_4->addWidget(lb_thingsweight);lh_4->addWidget(le_thingsweight);
@@ -90,6 +95,7 @@ void PrintDialog::init_lb_le()
     connect(btn_print,SIGNAL(clicked()),this,SLOT(slot_print()));
 
     lv_all=new QVBoxLayout();
+    lv_all->addWidget(le_number);
     lv_all->addLayout(lh_1);
     lv_all->addLayout(lh_2);
     lv_all->addLayout(lh_3);
@@ -140,18 +146,19 @@ void PrintDialog::init_lb_le()
 void PrintDialog::init_data(QStringList str)
 {
     le_number->setText(str.at(0));
-    le_placename->setText(str.at(1));
-    le_receiver->setText(str.at(2));
-    le_carnumber->setText(str.at(3));
-    le_dirver->setText(str.at(4));
-    le_totalWeight->setText(str.at(5));
-    le_carweight->setText(str.at(6));
-    le_thingsweight->setText(str.at(7));
-    le_price->setText(str.at(8));
-    le_time->setText(str.at(9));
+    le_thingstype->setText(str.at(1));
+    le_placename->setText(str.at(2));
+    le_receiver->setText(str.at(3));
+    le_carnumber->setText(str.at(4));
+    le_dirver->setText(str.at(5));
+    le_totalWeight->setText(str.at(6));
+    le_carweight->setText(str.at(7));
+    le_thingsweight->setText(str.at(8));
+    le_price->setText(str.at(9));
+    le_time->setText(str.at(10));
 
-    le_watcher->setText(str.at(11));
-    le_type->setText(str.at(14));
+    le_watcher->setText(str.at(12));
+    le_type->setText(str.at(15));
 }
 
 void PrintDialog::slot_delete()
@@ -167,7 +174,7 @@ void PrintDialog::slot_delete()
     {
 
         RecordDaoImp rdi;
-        bool ret = rdi.deleteRecordInfo(number);
+        bool ret = rdi.deleteRecordInfo_v3(number);
         if(ret)
         {
             qDebug()<<"提示：删除成功";
@@ -190,6 +197,7 @@ void PrintDialog::slot_update()
 {
     //数据准备
     QString number =le_number->text();
+    QString thingstype = le_thingstype->text();
     QString placename =le_placename->text();
 
     QString receiver = le_receiver->text();
@@ -210,7 +218,7 @@ void PrintDialog::slot_update()
     QString type ="已被修改";// le_type->text();
     //更新
     RecordDaoImp rdi;
-    bool ret = rdi.updateRecordInfo(number,placename,receiver,carnumber,dirver,time,name,totalWeight,carweight,thingsweight,price,type);
+    bool ret = rdi.updateRecordInfo_v3(number,thingstype,placename,receiver,carnumber,dirver,time,name,totalWeight,carweight,thingsweight,price,type);
     if(ret)
     {
         qDebug()<<"提示：修改成功";
@@ -229,6 +237,7 @@ void PrintDialog::slot_print()
     PrintTicket pt(this);
     //数据准备
     pt.number   =le_number->text();
+    pt.type     =le_thingstype->text();
     pt.placename =le_placename->text();
     pt.receiver = le_receiver->text();
     pt.carnumber = le_carnumber->text();
@@ -255,6 +264,16 @@ void PrintDialog::slot_print()
     else
         pt.flag_watcher=false;
     pt.print();
+}
+
+void PrintDialog::slot_calculate_weight()
+{
+    if(le_totalWeight->text().isEmpty())le_totalWeight->setText("0");
+    if(le_carweight->text().isEmpty())le_carweight->setText("0");
+
+    double TW =le_totalWeight->text().toDouble();
+    double CW =le_carweight->text().toDouble();
+    le_thingsweight->setText(QString::number(TW-CW));
 }
 
 
