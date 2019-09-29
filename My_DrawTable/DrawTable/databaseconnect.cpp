@@ -59,6 +59,26 @@ void DataBaseConnect::createconnect()                 //创建数据路的连接
                modefier text,\
                record_flag text\
                );");
+    //在v2的基础上增加了“种类type”
+    query.exec("create table if not exists tb_record_v3(\
+               number  text primary key not null,\
+               type text,\
+               placename  text,\
+               receiver text,\
+               carnumber  text,\
+               dirver text,\
+               totalweight double,\
+               carweight  double,\
+               thingsweight double,\
+               price    double,\
+               ticketTime   text,\
+               originalTime text,\
+               watcher text,\
+               modefyTime text,\
+               modefier text,\
+               record_flag text\
+               );");
+
     //表4 用户表
     query.exec("create table if not exists tb_user_v2(\
                account                  text primary key not null,\

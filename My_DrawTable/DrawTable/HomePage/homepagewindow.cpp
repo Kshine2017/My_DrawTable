@@ -86,7 +86,7 @@ void HomePageWindow::init_Button()
     connect(btn_Car_maintain,SIGNAL(clicked()),this,SLOT(slot_createCarMaintain()));
 
 
-    //车辆信息维护按钮
+    //类型信息维护按钮
     btn_Type_maintain = new QPushButton(this);
     btn_Type_maintain->setFixedSize(150,40);
     btn_Type_maintain->setStyleSheet("QPushButton{border-image: url(:/picture/type-up.png);}"
@@ -274,7 +274,7 @@ void HomePageWindow::getCarDataFromDB()
 
 void HomePageWindow::getTypeDataFromDB()
 {
-    qDebug()<<"---刷新下拉框---汽车信息";
+    qDebug()<<"---刷新下拉框---类型信息";
     model = new QSqlTableModel(this);
     TypeDaoImp op;
     op.selectallTypeInfo(model);
@@ -548,7 +548,7 @@ QFont::Black - 87 黑体
 
 
     lineEdit_man_recever= new QLineEdit(this);
-    lineEdit_man_driver= new QLineEdit(this);
+    lineEdit_man_driver = new QLineEdit(this);
     lineEdit_man_watcher= new QLineEdit(this);
 
     lineEdit_man_recever->setFixedHeight(30);
@@ -619,6 +619,7 @@ void HomePageWindow::slot_print()
 
         RecordDaoImp op;
         QString number      =lineEdit_number->text();
+        QString type        =combox_type->currentText();
         QString placename   =combox_place->currentText();
         QString receiver    =lineEdit_man_recever->text();
         QString carnumber   =combox_truck_number->currentText();
@@ -631,7 +632,7 @@ void HomePageWindow::slot_print()
         QString ticketTime      =dateTime.toString("yyyy-M-d hh:mm:ss");
         QString originalTime    =dateTime.toString("yyyy-MM-dd hh:mm:ss");
         QString watcher     =lineEdit_man_watcher->text();
-        op.insertRecordInfo(number,placename,receiver,carnumber,dirver,ticketTime,originalTime,watcher,"无","无",totalweight,carweight,thingsweight,price);
+        op.insertRecordInfo_v3(number,type,placename,receiver,carnumber,dirver,ticketTime,originalTime,watcher,"无","无",totalweight,carweight,thingsweight,price);
         //刷新新的流水号
         lineEdit_number->setText(getNumberSetting());
     }

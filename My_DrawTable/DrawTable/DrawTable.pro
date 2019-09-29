@@ -9,19 +9,19 @@ QT       += printsupport
 QT       += sql
 #QT       += charts  #绘制饼图
 
-CONFIG += qwt
+#CONFIG += qwt #20190723
 #CONFIG   += qaxcontainer
 QT += axcontainer
-DEFINES += QT_DLL QWT_DLL
+DEFINES += QT_DLL #QWT_DLL
 
 ##LIBS += -L"D:\Qt\Qt5.9.1\5.9.1\mingw53_32\lib" -lqwtd
 ##LIBS += -L"D:\Qt\Qt5.9.1\5.9.1\mingw53_32\lib" -lqwt
 ##INCLUDEPATH += D:\Qt\Qt5.9.1\5.9.1\mingw53_32\include\QWT
 
 #LIBS += -L"D:\Qt\Qt5.7.0\5.7\mingw53_32\lib" -lqwtd
-LIBS += -L"D:\Qt\Qt5.7.0\5.7\mingw53_32\lib" -lqwt
+#LIBS += -L"D:\Qt\Qt5.7.0\5.7\mingw53_32\lib" -lqwt #20190723
 #LIBS += -L"E:\DrawTable\lib" -lqwt
-INCLUDEPATH += D:\Qt\Qt5.7.0\5.7\mingw53_32\include\QWT
+#INCLUDEPATH += D:\Qt\Qt5.7.0\5.7\mingw53_32\include\QWT #20190723
 
 #LIBS += -L"D:\Qt\Qt5.9.2\5.9.2\mingw53_32\lib" -lqwtd
 #LIBS += -L"D:\Qt\Qt5.9.2\5.9.2\mingw53_32\lib" -lqwt
@@ -54,7 +54,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     HomePage/homepagewindow.cpp \
-    AnalzyPage/analzypagewindow.cpp \
     AddPage/addpagewindow.cpp \
     funcation.cpp \
     HomePage/placemaintainwidget.cpp \
@@ -73,7 +72,6 @@ SOURCES += main.cpp\
     registwidget.cpp \
     AnalzyPage/recorddaoimp.cpp \
     AnalzyPage/plotbar.cpp \
-    AnalzyPage/mybarchart.cpp \
     printdialog.cpp \
     printticket.cpp \
     UserPage/userpage.cpp \
@@ -85,11 +83,11 @@ SOURCES += main.cpp\
     HomePage/typemaintainwidget.cpp \
     Quality_inspection_reportPage/qualitypage.cpp \
     Quality_inspection_reportPage/widget_test.cpp \
-    Quality_inspection_reportPage/qir_pic.cpp
+    Quality_inspection_reportPage/qir_pic.cpp \
+    AnalzyPage_V2/analzypage_v2.cpp
 
 HEADERS  += mainwindow.h \
     HomePage/homepagewindow.h \
-    AnalzyPage/analzypagewindow.h \
     AddPage/addpagewindow.h \
     funcation.h \
     HomePage/placemaintainwidget.h \
@@ -108,7 +106,6 @@ HEADERS  += mainwindow.h \
     registwidget.h \
     AnalzyPage/recorddaoimp.h \
     AnalzyPage/plotbar.h \
-    AnalzyPage/mybarchart.h \
     printdialog.h \
     printticket.h \
     UserPage/userpage.h \
@@ -120,7 +117,8 @@ HEADERS  += mainwindow.h \
     HomePage/typemaintainwidget.h \
     Quality_inspection_reportPage/qualitypage.h \
     Quality_inspection_reportPage/widget_test.h \
-    Quality_inspection_reportPage/qir_pic.h
+    Quality_inspection_reportPage/qir_pic.h \
+    AnalzyPage_V2/analzypage_v2.h
 
 FORMS    +=
 
