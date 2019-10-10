@@ -8,7 +8,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QComboBox>
-
+#include <QTextEdit>
 #include <QPrinter>
 #include <QPrintPreviewDialog>
 
@@ -102,6 +102,11 @@ public:
     //界面显示中文大写
     QLabel* label_BigCN;
 
+
+    //备注输入框
+    QLabel* label_otherInformation;
+    QTextEdit* te_otherInformation;
+
     //收货人
     QLabel* label_man_recever;
     QLineEdit* lineEdit_man_recever;
@@ -129,8 +134,6 @@ public:
 public slots:
     void slot_print();
     void slot_calculate_weight();
-  //void slot_calculate_weight(QString);
-    void printPreviewSlot(QPrinter *printer);
     void slot_createPlaceMaintain();
     void slot_createCarMaintain();
     void slot_createTypeMaintain();

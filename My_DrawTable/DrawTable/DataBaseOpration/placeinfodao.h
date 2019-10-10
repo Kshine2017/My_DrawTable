@@ -1,7 +1,7 @@
 #ifndef PLACEINFODAO_H
 #define PLACEINFODAO_H
 
-#include "HomePage/placeinfo.h"
+#include "DataBaseOpration/placeinfo.h"
 class PlaceInfoDao                              //数据库操作（抽象类），用于适应不同的数据库
 {
 public:

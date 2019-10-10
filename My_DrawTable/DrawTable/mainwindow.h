@@ -6,12 +6,15 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include "HomePage/homepagewindow.h"
-#include "AnalzyPage_V2/analzypage_v2.h"
+#include "AnalzyPage/ANALZYPAGE.h"
 #include "AddPage/addpagewindow.h"
 #include "UserPage/userpage.h"
-#include "Quality_inspection_reportPage/qualitypage.h"
+//#include "Quality_inspection_reportPage/qualitypage.h"
 #include <QDockWidget>
 #include <QString>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QGridLayout>
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -34,7 +37,7 @@ private:
    QLabel* toolbar_Label_pic;
    QLabel* background_Label_pic;
    QLabel* Logo_Label_pic;
-
+   QVBoxLayout* ly_V_tool;
 
    QVBoxLayout* btn_layout;
    QPushButton* homePage_Button;
@@ -49,11 +52,13 @@ private:
    //AnalzyPageWindow* AnalzyWindow;
    AddPageWindow* Addwindow;
    UserPage*      Usermanagerwindow;
-   QualityPage* QualityWindow;
-   AnalzyPage_V2* AnalzyWindow_V2;
+   //QualityPage* QualityWindow;
+   ANALZYPAGE* AnalzyWindow;
+
+   //主界面构成
    QDockWidget* DockWindow;//左侧工具条
    QWidget* UserWindow; //右侧
-
+   QHBoxLayout* ly_H_main;
    //标志
     unsigned char Page_flag;
     QString account;
@@ -67,6 +72,8 @@ private:
     QLabel* lb_status;//身份
     QVBoxLayout* layoutV_label;
 
+    int screenWidth;//屏幕宽度
+    int screenHeight;//屏幕高度
 
 };
 

@@ -1,7 +1,7 @@
 #include "registwidget.h"
 #include <Qdebug>
 #include <QMessageBox>
-#include "UserPage/userdaoimp.h"
+#include "DataBaseOpration/userdaoimp.h"
 RegistWidget::RegistWidget(QWidget *parent):QDialog(parent)
 {
     qDebug()<<"打开用户注册页面";

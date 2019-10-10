@@ -55,70 +55,60 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     HomePage/homepagewindow.cpp \
     AddPage/addpagewindow.cpp \
-    funcation.cpp \
     HomePage/placemaintainwidget.cpp \
     HomePage/carmaintainwidget.cpp \
-    HomePage/placeinfo.cpp \
-    HomePage/placeinfodao.cpp \
-    HomePage/placeinfodaoimp.cpp \
-    databaseconnect.cpp \
-    HomePage/carinfo.cpp \
-    HomePage/carinfodao.cpp \
-    HomePage/carinfodaoimp.cpp \
     loginwidget.cpp \
-    UserPage/user.cpp \
-    UserPage/userdao.cpp \
-    UserPage/userdaoimp.cpp \
     registwidget.cpp \
-    AnalzyPage/recorddaoimp.cpp \
-    AnalzyPage/plotbar.cpp \
-    printdialog.cpp \
-    printticket.cpp \
     UserPage/userpage.cpp \
     UserPage/usermanagerdialog.cpp \
-    AnalzyPage/myframe.cpp \
     UserPage/exportimportexcel.cpp \
     UserPage/setconfig.cpp \
-    typedaoimp.cpp \
     HomePage/typemaintainwidget.cpp \
-    Quality_inspection_reportPage/qualitypage.cpp \
-    Quality_inspection_reportPage/widget_test.cpp \
-    Quality_inspection_reportPage/qir_pic.cpp \
-    AnalzyPage_V2/analzypage_v2.cpp
+    DataBaseOpration/carinfo.cpp \
+    DataBaseOpration/carinfodao.cpp \
+    DataBaseOpration/carinfodaoimp.cpp \
+    DataBaseOpration/placeinfo.cpp \
+    DataBaseOpration/placeinfodao.cpp \
+    DataBaseOpration/placeinfodaoimp.cpp \
+    DataBaseOpration/recorddaoimp.cpp \
+    DataBaseOpration/typedaoimp.cpp \
+    DataBaseOpration/user.cpp \
+    DataBaseOpration/userdao.cpp \
+    DataBaseOpration/userdaoimp.cpp \
+    AnalzyPage/analzypage.cpp \
+    DataBaseOpration/databaseconnect.cpp \
+    Common/funcation.cpp \
+    Common/printdialog.cpp \
+    Common/printticket.cpp
 
 HEADERS  += mainwindow.h \
     HomePage/homepagewindow.h \
     AddPage/addpagewindow.h \
-    funcation.h \
     HomePage/placemaintainwidget.h \
     HomePage/carmaintainwidget.h \
-    HomePage/placeinfo.h \
-    HomePage/placeinfodao.h \
-    HomePage/placeinfodaoimp.h \
-    databaseconnect.h \
-    HomePage/carinfo.h \
-    HomePage/carinfodao.h \
-    HomePage/carinfodaoimp.h \
     loginwidget.h \
-    UserPage/user.h \
-    UserPage/userdao.h \
-    UserPage/userdaoimp.h \
     registwidget.h \
-    AnalzyPage/recorddaoimp.h \
-    AnalzyPage/plotbar.h \
-    printdialog.h \
-    printticket.h \
     UserPage/userpage.h \
     UserPage/usermanagerdialog.h \
-    AnalzyPage/myframe.h \
     UserPage/exportimportexcel.h \
     UserPage/setconfig.h \
-    typedaoimp.h \
     HomePage/typemaintainwidget.h \
-    Quality_inspection_reportPage/qualitypage.h \
-    Quality_inspection_reportPage/widget_test.h \
-    Quality_inspection_reportPage/qir_pic.h \
-    AnalzyPage_V2/analzypage_v2.h
+    DataBaseOpration/placeinfodao.h \
+    DataBaseOpration/placeinfodaoimp.h \
+    DataBaseOpration/recorddaoimp.h \
+    DataBaseOpration/typedaoimp.h \
+    DataBaseOpration/user.h \
+    DataBaseOpration/userdao.h \
+    DataBaseOpration/userdaoimp.h \
+    DataBaseOpration/carinfo.h \
+    DataBaseOpration/carinfodao.h \
+    DataBaseOpration/carinfodaoimp.h \
+    DataBaseOpration/placeinfo.h \
+    AnalzyPage/analzypage.h \
+    DataBaseOpration/databaseconnect.h \
+    Common/funcation.h \
+    Common/printdialog.h \
+    Common/printticket.h
 
 FORMS    +=
 
@@ -127,3 +117,36 @@ RESOURCES += \
 
 
 #RC_FILE += myapp.rc
+
+DISTFILES += \
+    lib/qwt.dll \
+    lib/qwtd.dll \
+    AnalzyPage/AnalzyPage.rar \
+    design/03e3417f77dbefa3573a0fc1f622aa58.jpg \
+    design/393047af42fb9a9c5e2b1bb033876043.jpg \
+    design/u=4133702964,4126049183&fm=27&gp=0.jpg \
+    picture/homepage_background - 副本.jpg \
+    design/Car-down.png \
+    design/Car-up.png \
+    design/down.png \
+    design/finishPng-down.png \
+    design/finishPng-up.png \
+    design/homepage-border.png \
+    design/up.png \
+    design/表单.png \
+    design/表单2.png \
+    design/页面3布局设计.png \
+    design/首页布局.png \
+    picture/myappico.ico \
+    ico.ico \
+    myappico.ico \
+    config/current_user.ini \
+    config/liushuihao.ini \
+    design/数据库.txt \
+    picture/myapp.rc \
+    myapp.rc \
+    picture/homepage_background - 副本.jpg \
+    picture/homepage_background - 副本.jpg \
+    picture/homepage_background - 副本.jpg \
+    picture/homepage_background - 副本.jpg \
+    picture/homepage_background - 副本.jpg

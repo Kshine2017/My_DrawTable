@@ -1,8 +1,9 @@
 #include "printticket.h"
 #include <QPrintPreviewDialog>
-#include "AnalzyPage/recorddaoimp.h"
+#include "DataBaseOpration/recorddaoimp.h"
 #include <QPainter>
 #include "funcation.h"
+#include <QDebug>
 PrintTicket::PrintTicket(QWidget *parent)
     :QDialog(parent)
 {
@@ -43,8 +44,7 @@ bool PrintTicket::print()
         if(recordflag!="丢失补印")//丢失补印不需要再次写入数据（当然写也写不进去）
         {
             RecordDaoImp op;
-            //op.insertRecordInfo(number,placename,receiver,carnumber,dirver,ticketTime,originalTime,watcher,"无","无",totalweight,carweight,thingsweight,price,recordflag);
-            op.insertRecordInfo_v3(number,type,placename,receiver,carnumber,dirver,ticketTime,originalTime,watcher,"无","无",totalweight,carweight,thingsweight,price,recordflag);
+            op.insertRecordInfo(number,type,placename,receiver,carnumber,dirver,ticketTime,originalTime,watcher,"无","无",totalweight,carweight,thingsweight,price,otherinformation,recordflag);
         }
     }
     return true;
@@ -182,10 +182,21 @@ void PrintTicket::printPreviewSlot(QPrinter *printer)
     painter.drawText(QRect(sumHHH+table_H[6]/2-Text_WH*strlen(money.toStdString().c_str())/4,Y_2,480,Text_WH),money,QTextOption());
     //车牌号
     sumHHH+=table_H[6];
-    painter.drawText(QRect(sumHHH+table_H[7]/2-Text_WH*2,Y_2,480,Text_WH),carnumber,QTextOption());
+    int carnum_W=getTextRectWidth(carnumber,font_Text);//车牌号内容总长度
+    painter.drawText(QRect(sumHHH+table_H[7]/2-carnum_W/PPP/2,Y_2,carnum_W+100,Text_WH),carnumber,QTextOption());
+    qDebug()<<carnumber.length();
     //备注
+    QFont font_other("宋体",10);
+    painter.setFont(font_other);
+    sumHHH+=table_H[7];
+    int other_W=getTextRectWidth(otherinformation,font_other);//备注内容总长度
+    int other_H=getTextRectHeight(otherinformation,font_other);//备注内容总高度
+    int Y_other =border_up+table_V[0]+table_V[1]/2;
+    painter.drawText(QRect(sumHHH+table_H[8]/2-other_W/PPP/2,Y_other-other_H/PPP/2,other_W+100,other_H),otherinformation,QTextOption());//+100是因为pdf打印时，\n也占用了一定的宽度
+    //qDebug()<<"Other:"<<other_W<<other_H;
 
 
+    painter.setFont(font_Text);
     //（6）第三行文字
     int Y_3 = border_up+table_V[0]+table_V[1]+table_V[2]/2-Text_WH/2;//居中调节后第三行文字所在的位置
     //净重大写：

@@ -1,6 +1,6 @@
 #include "placemaintainwidget.h"
 #include <QDebug>
-#include "placeinfodaoimp.h"
+#include "DataBaseOpration/placeinfodaoimp.h"
 #include <QSqlTableModel>
 #include <QStandardItemModel>
 #include <QHeaderView>

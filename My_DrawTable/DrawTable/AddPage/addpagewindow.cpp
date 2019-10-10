@@ -1,11 +1,11 @@
 #include "addpagewindow.h"
 #include <QDebug>
 #include <QSqlTableModel>
-#include "HomePage/placeinfodaoimp.h"
-#include "HomePage/carinfodaoimp.h"
-#include "typedaoimp.h"
-#include "funcation.h"
-#include "printticket.h"
+#include "DataBaseOpration/placeinfodaoimp.h"
+#include "DataBaseOpration/carinfodaoimp.h"
+#include "DataBaseOpration/typedaoimp.h"
+#include "Common/funcation.h"
+#include "Common/printticket.h"
 AddPageWindow::AddPageWindow(QWidget *parent) : QWidget(parent)
 {
     background_pic = new QLabel(this);
@@ -285,7 +285,13 @@ QFont::Black - 87 黑体
     label_BigCN->setGeometry(10,250,400,30);
     //label_BigCN->setFrameShape(QFrame::WinPanel);//用于观测位置
 
-
+    label_otherInformation = new QLabel(this);
+    label_otherInformation->setFont(QFont("楷体",15,QFont::Bold));
+    label_otherInformation->setText("备注信息：");
+    te_otherInformation=new QTextEdit(this);
+    te_otherInformation->setPlaceholderText("建议:(英文,数字,符号算半个汉字)\n每行5个汉字\n最多4行。");
+    label_otherInformation->setGeometry(30,300,100,30);
+    te_otherInformation->setGeometry(30,340,200,50);
 
     //第四部分 人员信息
     label_man_recever = new QLabel(this);
@@ -462,7 +468,7 @@ void AddPageWindow::slot_print()
     pt.originalTime = dateEdit->dateTime().toString("yyyy-MM-dd ")+timeEdit->dateTime().toString("hh:mm:ss");  ;//创建时间
     pt.watcher = lineEdit_man_watcher->text();
     pt.recordflag="增补出单";
-
+    pt.otherinformation=te_otherInformation->toPlainText();
     if(ckb_dirver->checkState()==Qt::Checked)
         pt.flag_dirver=true;
     else

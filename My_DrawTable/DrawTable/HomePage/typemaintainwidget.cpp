@@ -1,6 +1,6 @@
 #include "typemaintainwidget.h"
 #include <QDebug>
-#include "typedaoimp.h"
+#include "DataBaseOpration/typedaoimp.h"
 
 #include <QStandardItemModel>
 #include <QHeaderView>

@@ -1,6 +1,6 @@
 #include "setconfig.h"
 #include "QDebug"
-#include "funcation.h"
+#include "Common/funcation.h"
 SetConfig::SetConfig(QWidget *parent)
 : QDialog(parent)
 {

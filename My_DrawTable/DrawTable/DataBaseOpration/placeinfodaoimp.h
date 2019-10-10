@@ -1,6 +1,6 @@
 #ifndef PLACEINFODAOIMP_H
 #define PLACEINFODAOIMP_H
-#include "HomePage/placeinfodao.h"
+#include "DataBaseOpration/placeinfodao.h"
 #include <QSqlQueryModel>
 #include <QString>
 class PlaceInfoDaoImp:public PlaceInfoDao //sqlite数据库

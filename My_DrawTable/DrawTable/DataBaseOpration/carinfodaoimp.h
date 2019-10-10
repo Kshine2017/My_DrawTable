@@ -1,6 +1,6 @@
 #ifndef CARINFODAOIMP_H
 #define CARINFODAOIMP_H
-#include "HomePage/carinfodao.h"
+#include "DataBaseOpration/carinfodao.h"
 #include <QSqlQueryModel>
 #include <QString>
 class CarInfoDaoImp : public CarInfoDao

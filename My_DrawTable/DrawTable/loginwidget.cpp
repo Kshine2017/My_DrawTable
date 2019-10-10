@@ -5,8 +5,8 @@
 #include <QApplication>
 #include <QDebug>
 #include <QMessageBox>
-#include "UserPage/userdaoimp.h"
-#include "funcation.h"
+#include "DataBaseOpration/userdaoimp.h"
+#include "Common/funcation.h"
 LoginWidgett::LoginWidgett(QWidget *parent)
     :QDialog(parent)
 {

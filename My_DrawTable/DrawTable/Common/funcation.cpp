@@ -348,4 +348,27 @@ float readPrinterDpiRate()
         return defaultDPI/Ldpi;
     return defaultDPI/Rdpi;
 }
+#include <QFontMetrics>
+int getTextRectWidth(QString str,QFont font,int rate)
+{
+    QStringList strlist = str.split('\n');
+    QFontMetrics fm(font);
+    int www=0;
+    for(int i=0;i<strlist.length();i++)
+    {
+        if(fm.boundingRect(strlist[i]).width()>www)
+            www=fm.boundingRect(strlist[i]).width();
+    }
+    //www+=fm.boundingRect("凯").width();
+    return www*rate;
+}
+#include <QStringList>
+int getTextRectHeight(QString str,QFont font,int rate)
+{
 
+    QStringList strlist = str.split('\n');
+    //strlist.removeAll("");
+    //qDebug()<<str<<strlist;
+    QFontMetrics fm(font);
+    return fm.boundingRect(str).height()*rate*strlist.length();
+}

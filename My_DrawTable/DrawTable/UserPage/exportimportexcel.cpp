@@ -7,19 +7,20 @@
 #include <QSqlError>
 #include <QSqlQueryModel>
 #include <QModelIndex>
-
+#include <QDateTime>
 //#include <sapi.h>
 #include "qt_windows.h"
 
 #include <QMessageBox>
 
-#include "HomePage/carinfodaoimp.h"            //汽车
-#include "HomePage/placeinfodaoimp.h"          //场地
-#include "AnalzyPage/recorddaoimp.h"        //记录
-#include "userdaoimp.h"                     //用户
+#include "DataBaseOpration/carinfodaoimp.h"            //汽车
+#include "DataBaseOpration/placeinfodaoimp.h"          //场地
+#include "DataBaseOpration/recorddaoimp.h"        //记录
+#include "DataBaseOpration/userdaoimp.h"                     //用户
+#include "DataBaseOpration/typedaoimp.h"
 #include <QDesktopWidget>
 #include <QApplication>
-
+#include "DataBaseOpration/typedaoimp.h"
 ExportImportExcel::ExportImportExcel(QWidget *parent)
 :QDialog(parent)
 {
@@ -168,59 +169,54 @@ void ExportImportExcel::DATAtoExcel(QAxObject *work_book)
     }
     qDebug()<<"2、work_book is "<<work_book;
     QSqlQueryModel model;
-    //model.setQuery("select * from reagent_info_v2;");
-
-    //----------得到标题名称-------------------
-    //qDebug()<<model.headerData(2,Qt::Horizontal).toString();
+    QAxObject *cell ;
+    int columnNumber,rowNumber;
     //---------------------------------------
-    QAxObject *work_sheets = work_book->querySubObject("Sheets");//默认有一张表1
+    QAxObject *work_sheets = work_book->querySubObject("Sheets");//默认有一张表1 //品类信息
     work_sheets->querySubObject("Add()");//表2
     work_sheets->querySubObject("Add()");//表3
-    work_sheets->querySubObject("Add()");//表4  //用户信息
-    qDebug()<<"3、work_sheets is "<<work_sheets;
-    QAxObject *first_sheet = work_sheets->querySubObject("Item(int)", 1);
-    qDebug()<<"3.1、first_sheet is "<<first_sheet;
-    first_sheet->setProperty("Name","车辆信息");
-    //数据准备
-    CarInfoDaoImp cd;
-    cd.selectallCarInfo_model(&model);
-    int columnNumber=model.columnCount();
-    int rowNumber=model.rowCount();
+    work_sheets->querySubObject("Add()");//表4
+    work_sheets->querySubObject("Add()");//表5  //用户信息
 
-    QAxObject *cell ;
+    //---------------------------------------
+    QAxObject *first_sheet = work_sheets->querySubObject("Item(int)", 1);
+    first_sheet->setProperty("Name","品类信息");
+
+    //数据准备
+    TypeDaoImp tdi;
+    tdi.selectallTypeInfo(&model);
+    columnNumber=model.columnCount();
+    rowNumber=model.rowCount();
+
+
     //写入栏目名
     for(int i=0;i<columnNumber;i++)
     {
         cell = first_sheet->querySubObject("Cells(int,int)", 1, i+1);
         cell->setProperty("Value",model.headerData(i,Qt::Horizontal).toString());
-        cell->dynamicCall("SetValue(const QVariant&)",model.headerData(i,Qt::Horizontal));
     }
     //写入数据
     for(int i=0;i<rowNumber;i++)
         for(int j=0;j<columnNumber;j++)
         {
-
             cell = first_sheet->querySubObject("Cells(int,int)", i+2, j+1);
             cell->setProperty("Value", model.data(model.index(i,j)));
-            cell->dynamicCall("SetValue(const QVariant&)",model.data(model.index(i,j)));
         }
-
     qDebug()<<"已完成第一页表格数据";
+
     QAxObject *second_sheet = work_sheets->querySubObject("Item(int)", 2);
-    second_sheet->setProperty("Name","场地信息");
-    qDebug()<<"3.2、second_sheet is "<<second_sheet;
+    second_sheet->setProperty("Name","车辆信息");
     //数据准备
-    PlaceInfoDaoImp op;
-    op.selectallPlaceInfo_model(&model);
-    //model.setQuery("select * from reagent_movement_v2;");
+    CarInfoDaoImp cd;
+    cd.selectallCarInfo_model(&model);
     columnNumber=model.columnCount();
     rowNumber=model.rowCount();
+
     //写入栏目名
     for(int i=0;i<columnNumber;i++)
     {
         cell = second_sheet->querySubObject("Cells(int,int)", 1, i+1);
         cell->setProperty("Value",model.headerData(i,Qt::Horizontal).toString());
-        cell->dynamicCall("SetValue(const QVariant&)",model.headerData(i,Qt::Horizontal));
     }
     //写入数据
     for(int i=0;i<rowNumber;i++)
@@ -228,18 +224,15 @@ void ExportImportExcel::DATAtoExcel(QAxObject *work_book)
         {
             cell = second_sheet->querySubObject("Cells(int,int)", i+2, j+1);
             cell->setProperty("Value", model.data(model.index(i,j)));
-            cell->dynamicCall("SetValue(const QVariant&)",model.data(model.index(i,j)));
         }
-
     qDebug()<<"已完成第二页表格数据";
-    QAxObject *third_sheet = work_sheets->querySubObject("Item(int)", 3);
-    third_sheet->setProperty("Name","单据信息");
-     qDebug()<<"3.3、third_sheet is "<<third_sheet;
 
-     //数据准备
-     RecordDaoImp rdi;
-     rdi.selectallRecordInfo(&model);
-    //model.setQuery("select * from standard_info_v2;");
+
+    QAxObject *third_sheet = work_sheets->querySubObject("Item(int)", 3);
+    third_sheet->setProperty("Name","场地信息");
+    //数据准备
+    PlaceInfoDaoImp op;
+    op.selectallPlaceInfo_model(&model);
     columnNumber=model.columnCount();
     rowNumber=model.rowCount();
     //写入栏目名
@@ -247,48 +240,65 @@ void ExportImportExcel::DATAtoExcel(QAxObject *work_book)
     {
         cell = third_sheet->querySubObject("Cells(int,int)", 1, i+1);
         cell->setProperty("Value",model.headerData(i,Qt::Horizontal).toString());
-        cell->dynamicCall("SetValue(const QVariant&)",model.headerData(i,Qt::Horizontal));
     }
     //写入数据
     for(int i=0;i<rowNumber;i++)
         for(int j=0;j<columnNumber;j++)
         {
             cell = third_sheet->querySubObject("Cells(int,int)", i+2, j+1);
-            cell->setProperty("Value", model.data(model.index(i,j)).toString());
-            cell->dynamicCall("SetValue(const QVariant&)",model.data(model.index(i,j)));
-
-
+            cell->setProperty("Value", model.data(model.index(i,j)));
         }
     qDebug()<<"已完成第三页表格数据";
 
-
-    QAxObject *forth_sheet = work_sheets->querySubObject("Item(int)", 4);
-    forth_sheet->setProperty("Name","用户信息");
-     qDebug()<<"3.4、forth_sheet is "<<forth_sheet;
+    QAxObject *fourth_sheet = work_sheets->querySubObject("Item(int)", 4);
+    fourth_sheet->setProperty("Name","单据信息");
 
      //数据准备
-    UserDaoImp udi;
-    udi.selectallUserInfo(&model);
-    //model.setQuery("select * from standard_info_v2;");
+     RecordDaoImp rdi;
+     rdi.selectallRecordInfo(&model);
     columnNumber=model.columnCount();
     rowNumber=model.rowCount();
     //写入栏目名
     for(int i=0;i<columnNumber;i++)
     {
-        cell = forth_sheet->querySubObject("Cells(int,int)", 1, i+1);
+        cell = fourth_sheet->querySubObject("Cells(int,int)", 1, i+1);
         cell->setProperty("Value",model.headerData(i,Qt::Horizontal).toString());
-        cell->dynamicCall("SetValue(const QVariant&)",model.headerData(i,Qt::Horizontal));
     }
     //写入数据
     for(int i=0;i<rowNumber;i++)
         for(int j=0;j<columnNumber;j++)
         {
-            cell = forth_sheet->querySubObject("Cells(int,int)", i+2, j+1);
-            cell->setProperty("Value", model.data(model.index(i,j)));
-            cell->dynamicCall("SetValue(const QVariant&)",model.data(model.index(i,j)));
+            cell = fourth_sheet->querySubObject("Cells(int,int)", i+2, j+1);
+            if(j==10)cell->setProperty("NumberFormatLocal", "yyyy-M-d hh:mm:ss");//票上时间
+            if(j==11||j==13)cell->setProperty("NumberFormatLocal", "yyyy-MM-dd hh:mm:ss");//创建时间和修改时间
+            cell->setProperty("Value", model.data(model.index(i,j)).toString());
         }
     qDebug()<<"已完成第四页表格数据";
 
+
+    QAxObject *fifth_sheet = work_sheets->querySubObject("Item(int)", 5);
+    fifth_sheet->setProperty("Name","用户信息");
+
+     //数据准备
+    UserDaoImp udi;
+    udi.selectallUserInfo(&model);
+    columnNumber=model.columnCount();
+    rowNumber=model.rowCount();
+    //写入栏目名
+    for(int i=0;i<columnNumber;i++)
+    {
+        cell = fifth_sheet->querySubObject("Cells(int,int)", 1, i+1);
+        cell->setProperty("Value",model.headerData(i,Qt::Horizontal).toString());
+    }
+    //写入数据
+    for(int i=0;i<rowNumber;i++)
+        for(int j=0;j<columnNumber;j++)
+        {
+            cell = fifth_sheet->querySubObject("Cells(int,int)", i+2, j+1);
+            if(j==2)cell->setProperty("NumberFormatLocal", "yyyy-MM-dd hh:mm:ss");
+            cell->setProperty("Value", model.data(model.index(i,j)));
+        }
+    qDebug()<<"已完成第五页表格数据";
 
 }
 
@@ -304,15 +314,43 @@ void ExportImportExcel::DATAtoBase(QAxObject *work_book)
     int sheet_count = work_sheets->property("Count").toInt();  //获取工作表数目
     if(sheet_count > 0)
     {
-        QAxObject *work_sheet = work_book->querySubObject("Sheets(int)", 1);//车辆
-        QAxObject *used_range = work_sheet->querySubObject("UsedRange");
-        QAxObject *rows = used_range->querySubObject("Rows");
-        int row_number = rows->property("Count").toInt()-1;  //获取行数
+        QAxObject *work_sheet;
+        QAxObject *used_range;
+        QAxObject *rows;
+        int row_number;  //获取行数
+        //导入品类=================================================================
+        work_sheet = work_book->querySubObject("Sheets(int)", 1);
+        used_range = work_sheet->querySubObject("UsedRange");
+        rows = used_range->querySubObject("Rows");
+        row_number = rows->property("Count").toInt()-1;  //获取行数
+        //qDebug()<<"表1有 "<<row_number<<" 个数据";
+        if(row_number<0)row_number=0;
+        for(int i=0;i<row_number;i++)//多条数据+循环写入
+        {
+            QString thingtype=work_sheet->querySubObject("Cells(int,int)", i+2, 1)->dynamicCall("Value").toString();
+            if(thingtype.isEmpty())continue;
+            //判断是否已有
+            TypeDaoImp tdi;
+            if(tdi.isOneExist(thingtype))
+            {
+                //只有一个成员，不用更新
+            }
+            else
+                tdi.insertTypeInfo(thingtype);//插入
+
+        }
+
+        //导入车辆=================================================================
+        work_sheet = work_book->querySubObject("Sheets(int)", 2);//车辆
+        used_range = work_sheet->querySubObject("UsedRange");
+        rows = used_range->querySubObject("Rows");
+        row_number = rows->property("Count").toInt()-1;  //获取行数
         //qDebug()<<"表1有 "<<row_number<<" 个数据";
         if(row_number<0)row_number=0;
         for(int i=0;i<row_number;i++)//多条数据+循环写入
         {
             QString carnumber=work_sheet->querySubObject("Cells(int,int)", i+2, 1)->dynamicCall("Value").toString();
+            if(carnumber.isEmpty())continue;
             QString dirver=work_sheet->querySubObject("Cells(int,int)", i+2, 2)->dynamicCall("Value").toString();
             double truckweight=work_sheet->querySubObject("Cells(int,int)", i+2, 3)->dynamicCall("Value").toDouble();
             QString telephone =work_sheet->querySubObject("Cells(int,int)", i+2, 4)->dynamicCall("Value").toString();
@@ -329,7 +367,8 @@ void ExportImportExcel::DATAtoBase(QAxObject *work_book)
 
         }
 
-        work_sheet = work_book->querySubObject("Sheets(int)", 2);//场地
+        //导入场地=================================================================
+        work_sheet = work_book->querySubObject("Sheets(int)", 3);//场地
         used_range = work_sheet->querySubObject("UsedRange");
         rows = used_range->querySubObject("Rows");
         row_number = rows->property("Count").toInt()-1;  //获取行数
@@ -341,6 +380,7 @@ void ExportImportExcel::DATAtoBase(QAxObject *work_book)
 
             int ID=work_sheet->querySubObject("Cells(int,int)", i+2, 1)->dynamicCall("Value").toInt();
             QString placename= work_sheet->querySubObject("Cells(int,int)", i+2, 2)->dynamicCall("Value").toString();
+            if(placename.isEmpty())continue;
             QString placeman=work_sheet->querySubObject("Cells(int,int)", i+2, 3)->dynamicCall("Value").toString();;
             QString telephone=work_sheet->querySubObject("Cells(int,int)", i+2,4)->dynamicCall("Value").toString();
 
@@ -352,7 +392,8 @@ void ExportImportExcel::DATAtoBase(QAxObject *work_book)
 
         }
 
-        work_sheet = work_book->querySubObject("Sheets(int)", 3);//票据
+        //导入票据=================================================================
+        work_sheet = work_book->querySubObject("Sheets(int)", 4);//票据
         used_range = work_sheet->querySubObject("UsedRange");
         rows = used_range->querySubObject("Rows");
         row_number = rows->property("Count").toInt()-1;  //获取行数
@@ -360,35 +401,54 @@ void ExportImportExcel::DATAtoBase(QAxObject *work_book)
         //qDebug()<<"表3有 "<<row_number<<" 个数据";
         for(int i=0;i<row_number;i++)//多条数据+循环写入
         {
+            //流水号1	品类	场地	收货人	车牌号	驾驶员6
+            //毛重(吨)7	皮重(吨)8	 净重(吨)9	 单价(元)10
+            //票据时间11	原始时间12	过磅人13	修改时间14	修改人15	票据类型16	备注信息17
+
+            //流水号1
             QString number=work_sheet->querySubObject("Cells(int,int)", i+2,1)->dynamicCall("Value").toString();
-            QString placename=work_sheet->querySubObject("Cells(int,int)", i+2,2)->dynamicCall("Value").toString();
-            QString receiver=work_sheet->querySubObject("Cells(int,int)", i+2,3)->dynamicCall("Value").toString();
-            QString carnumber=work_sheet->querySubObject("Cells(int,int)", i+2,4)->dynamicCall("Value").toString();
-            QString dirver=work_sheet->querySubObject("Cells(int,int)", i+2,5)->dynamicCall("Value").toString();
+            if(number.isEmpty())continue;
+            //品类2
+            QString thingtype=work_sheet->querySubObject("Cells(int,int)", i+2,2)->dynamicCall("Value").toString();;
+            //场地3
+            QString placename=work_sheet->querySubObject("Cells(int,int)", i+2,3)->dynamicCall("Value").toString();
+            //收货人4
+            QString receiver=work_sheet->querySubObject("Cells(int,int)", i+2,4)->dynamicCall("Value").toString();
+            //车牌号5
+            QString carnumber=work_sheet->querySubObject("Cells(int,int)", i+2,5)->dynamicCall("Value").toString();
+            //驾驶员6
+            QString dirver=work_sheet->querySubObject("Cells(int,int)", i+2,7)->dynamicCall("Value").toString();
+            //毛重7
+            double totalWeight=work_sheet->querySubObject("Cells(int,int)", i+2,7)->dynamicCall("Value").toDouble();
+            double carweight=work_sheet->querySubObject("Cells(int,int)", i+2,8)->dynamicCall("Value").toDouble();
+            double thingsweight=work_sheet->querySubObject("Cells(int,int)", i+2,9)->dynamicCall("Value").toDouble();
+            double price=work_sheet->querySubObject("Cells(int,int)", i+2,10)->dynamicCall("Value").toDouble();
 
-            double totalWeight=work_sheet->querySubObject("Cells(int,int)", i+2,6)->dynamicCall("Value").toDouble();
-            double carweight=work_sheet->querySubObject("Cells(int,int)", i+2,7)->dynamicCall("Value").toDouble();
-            double thingsweight=work_sheet->querySubObject("Cells(int,int)", i+2,8)->dynamicCall("Value").toDouble();
-            double price=work_sheet->querySubObject("Cells(int,int)", i+2,9)->dynamicCall("Value").toDouble();
+            //票据时间11
+            QString ticketTime=work_sheet->querySubObject("Cells(int,int)", i+2,11)->dynamicCall("Value").toDateTime().toString("yyyy-M-d hh:mm:ss");
 
-            QString ticketTime=work_sheet->querySubObject("Cells(int,int)", i+2,10)->dynamicCall("Value").toString();
-            QString orignalTime=work_sheet->querySubObject("Cells(int,int)", i+2,11)->dynamicCall("Value").toString();
-            QString watcher=work_sheet->querySubObject("Cells(int,int)", i+2,12)->dynamicCall("Value").toString();
-            QString modefytime=work_sheet->querySubObject("Cells(int,int)", i+2,13)->dynamicCall("Value").toString();
-            QString modefier=work_sheet->querySubObject("Cells(int,int)", i+2,14)->dynamicCall("Value").toString();
-            QString type=work_sheet->querySubObject("Cells(int,int)", i+2,15)->dynamicCall("Value").toString();
-
+            //原始时间12
+            QString orignalTime=work_sheet->querySubObject("Cells(int,int)", i+2,12)->dynamicCall("Value").toDateTime().toString("yyyy-MM-dd hh:mm:ss");
+            QString watcher=work_sheet->querySubObject("Cells(int,int)", i+2,13)->dynamicCall("Value").toString();
+            //修改时间14
+            QString modefytime=work_sheet->querySubObject("Cells(int,int)", i+2,14)->dynamicCall("Value").toDateTime().toString("yyyy-MM-dd hh:mm:ss");
+            if(modefytime.isEmpty())modefytime="无";
+            QString modefier=work_sheet->querySubObject("Cells(int,int)", i+2,15)->dynamicCall("Value").toString();
+            QString type=work_sheet->querySubObject("Cells(int,int)", i+2,16)->dynamicCall("Value").toString();
+            //备注信息17
+            QString otherinformation=work_sheet->querySubObject("Cells(int,int)", i+2,17)->dynamicCall("Value").toString();
             RecordDaoImp dost;
-            if(dost.isOneExist(number))
+            if(dost.isOneExist(number))//如果已存在，则删除
             {
                 dost.deleteRecordInfo(number);
             }
-            dost.insertRecordInfo(number,placename,receiver,carnumber,dirver,ticketTime,orignalTime,watcher,modefytime,modefier,
-                                  totalWeight,carweight,thingsweight,price,type);
+            dost.insertRecordInfo(number,thingtype,placename,receiver,carnumber,dirver,ticketTime,orignalTime,watcher,modefytime,modefier,
+                                  totalWeight,carweight,thingsweight,price,otherinformation,type);
 
         }
 
-        work_sheet = work_book->querySubObject("Sheets(int)", 4);//用户
+        //导入用户=================================================================
+        work_sheet = work_book->querySubObject("Sheets(int)", 5);//用户
         used_range = work_sheet->querySubObject("UsedRange");
         rows = used_range->querySubObject("Rows");
         row_number = rows->property("Count").toInt()-1;  //获取行数
@@ -397,8 +457,9 @@ void ExportImportExcel::DATAtoBase(QAxObject *work_book)
         for(int i=0;i<row_number;i++)//多条数据+循环写入
         {
             QString account=work_sheet->querySubObject("Cells(int,int)", i+2, 1)->dynamicCall("Value").toString();
+            if(account=="admin"||account.isEmpty())continue;//管理员账号不可以导入
             QString name= work_sheet->querySubObject("Cells(int,int)", i+2, 2)->dynamicCall("Value").toString();
-          //  QString time=work_sheet->querySubObject("Cells(int,int)", i+2, 3)->dynamicCall("Value").toString();;
+          //  QString time=work_sheet->querySubObject("Cells(int,int)", i+2, 3)->dynamicCall("Value").toDateTime().toString("yyyy-MM-dd hh:mm:ss");
             QString status=work_sheet->querySubObject("Cells(int,int)", i+2,4)->dynamicCall("Value").toString();
             UserDaoImp dp;
             if(dp.isOneExist(account))

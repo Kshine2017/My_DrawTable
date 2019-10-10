@@ -1,5 +1,5 @@
-#ifndef ANALZYPAGE_V2_H
-#define ANALZYPAGE_V2_H
+#ifndef ANALZYPAGE_H
+#define ANALZYPAGE_H
 
 #include <QWidget>
 #include <QLabel>
@@ -11,11 +11,11 @@
 #include <QHBoxLayout>
 #include <QComboBox>
 
-class AnalzyPage_V2 : public QWidget
+class ANALZYPAGE : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AnalzyPage_V2(QWidget *parent = 0);
+    explicit ANALZYPAGE(QWidget *parent = 0);
     QLabel* background_pic;
     QVBoxLayout* ly_V_all;
 
@@ -67,4 +67,4 @@ public slots:
     void slot_display();
 };
 
-#endif // ANALZYPAGE_V2_H
+#endif // ANALZYPAGE_H

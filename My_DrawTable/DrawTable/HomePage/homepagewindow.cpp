@@ -1,19 +1,20 @@
 #include "homepagewindow.h"
 #include <QDebug>
 #include <QPainter>
-#include "funcation.h"
+#include "Common/funcation.h"
 #include <QFrame>
-#include "placeinfodaoimp.h"
-#include "carinfodaoimp.h"
-#include "typedaoimp.h"
-//#include <QSqlTableModel>
+#include "DataBaseOpration/placeinfodaoimp.h"
+#include "DataBaseOpration/carinfodaoimp.h"
+#include "DataBaseOpration/typedaoimp.h"
 #include <QListView>
-#include "AnalzyPage/recorddaoimp.h"
+#include "DataBaseOpration/recorddaoimp.h"
 #include <QDateTime>
 #include <QMessageBox>
+#include "Common/printticket.h"
 HomePageWindow::HomePageWindow(QWidget *parent) :
     QWidget(parent)
 {
+
     //背景
     background_pic = new QLabel(this);
     background_pic->setFixedSize(1000/5*4,500);
@@ -412,8 +413,8 @@ QFont::Black - 87 黑体
     lineEdit_price->setFont(QFont("宋体",13,75));
     lineEdit_price->setPlaceholderText("货物单价");
     //lineEdit_price->setClearButtonEnabled(true);
-
     // lineEdit_price->setValidator(new QRegExpValidator(rx,lineEdit_price));
+
 
     //布局
     nameLayout_V =new QVBoxLayout;
@@ -530,7 +531,13 @@ QFont::Black - 87 黑体
     label_BigCN->setGeometry(10,250,400,30);
     //label_BigCN->setFrameShape(QFrame::WinPanel);//用于观测位置
 
-
+    label_otherInformation = new QLabel(this);
+    label_otherInformation->setFont(QFont("楷体",15,QFont::Bold));
+    label_otherInformation->setText("备注信息：");
+    te_otherInformation=new QTextEdit(this);
+    te_otherInformation->setPlaceholderText("建议:(英文,数字,符号算半个汉字)\n每行5个汉字\n最多4行。");
+    label_otherInformation->setGeometry(30,300,100,30);
+    te_otherInformation->setGeometry(30,340,200,50);
 
     //第四部分 人员信息
     label_man_recever = new QLabel(this);
@@ -596,219 +603,45 @@ QFont::Black - 87 黑体
 
 void HomePageWindow::slot_print()
 {
-    qDebug()<<"点击打印按钮";
-    qDebug()<<"流水号："<<lineEdit_number->text();
+    qDebug()<<"主页---点击打印";
+    PrintTicket pt(this);
+    //数据准备
+    pt.number =lineEdit_number->text();
+    pt.type=combox_type->currentText();
+    pt.placename =combox_place->currentText();
+    pt.receiver = lineEdit_man_recever->text();
+    pt.carnumber = combox_truck_number->currentText();
+    pt.dirver = lineEdit_man_driver->text();
+    pt.totalweight = lineEdit_totalWeight->text().toDouble();
+    pt.carweight = lineEdit_truckWeight->text().toDouble();
+    pt.thingsweight = lineEdit_thingsWeight->text().toDouble();
+    pt.price = lineEdit_price->text().toDouble();
+    QDateTime dateTime=QDateTime::currentDateTime();
+    pt.ticketTime      =dateTime.toString("yyyy-M-d hh:mm:ss");//票上显示的时间
+    pt.originalTime    =dateTime.toString("yyyy-MM-dd hh:mm:ss");//创建时间
 
-    //qDebug()<<combox_place->currentText();
-    //1,创建打印机
-    QPrinter printer(QPrinter::HighResolution);
-
-    //2,自定义纸张大小
-    printer.setPageSize(QPrinter::Custom);//页
-    printer.setPaperSize(QSizeF(600,230),QPrinter::Point);//纸张大小
-
-
-    //3，创建预览窗口
-    QPrintPreviewDialog preview(&printer, this);
-    preview.setMinimumSize(841,400);//841==100%显示比例
-
-
-    connect(&preview, SIGNAL(paintRequested(QPrinter*)), SLOT(printPreviewSlot(QPrinter*)));
-    if(preview.exec ()==QDialog::Accepted)
-    {
-
-        RecordDaoImp op;
-        QString number      =lineEdit_number->text();
-        QString type        =combox_type->currentText();
-        QString placename   =combox_place->currentText();
-        QString receiver    =lineEdit_man_recever->text();
-        QString carnumber   =combox_truck_number->currentText();
-        QString dirver      =lineEdit_man_driver->text();
-        double totalweight  =lineEdit_totalWeight->text().toDouble();
-        double carweight    =lineEdit_truckWeight->text().toDouble();
-        double thingsweight =lineEdit_thingsWeight->text().toDouble();
-        double price        =lineEdit_price->text().toDouble();
-        QDateTime dateTime=QDateTime::currentDateTime();
-        QString ticketTime      =dateTime.toString("yyyy-M-d hh:mm:ss");
-        QString originalTime    =dateTime.toString("yyyy-MM-dd hh:mm:ss");
-        QString watcher     =lineEdit_man_watcher->text();
-        op.insertRecordInfo_v3(number,type,placename,receiver,carnumber,dirver,ticketTime,originalTime,watcher,"无","无",totalweight,carweight,thingsweight,price);
-        //刷新新的流水号
-        lineEdit_number->setText(getNumberSetting());
-    }
-
-}
-
-
-
-void HomePageWindow::printPreviewSlot(QPrinter *printer)
-{
-    //4，创建画家
-    QPainter painter(printer);//继承打印
-    float PPP = readPrinterDpiRate();
-    //5,参数
-    int Text_WH=120/PPP;
-    int Title_WH=180/PPP;
-    int explain_WH = 80/PPP;
-
-    char column[10][20]={"品名","单位","毛重","皮重","净重","单价","金额","车号","备注",""};
-    //----------------------------------------------
-    int border_left = 100/PPP;
-    int title_up = 100/PPP;
-    //-----------------------------------------------
-    int border_up = 510/PPP+title_up;//目前先定420，之后可以根据 上方文字的字号 自动得出距离
-    int table_width=4158/PPP;
-    int min_margin = 20/PPP; //最小边距，文字距离表格线
-    int table_V[4]={(int)(224/PPP),(int)(354/PPP),(int)(280/PPP),(int)(0/PPP)};//水平线间隔
-    int table_H[10]={(int)(750/PPP) ,(int)(254/PPP) ,(int)(406/PPP) ,(int)(406/PPP) ,(int)(450/PPP) ,(int)(424/PPP) ,(int)(548/PPP) ,(int)(510/PPP) ,(int)(420/PPP) , (int)(0/PPP)};//竖线间隔距离
-
-    int datePosition=border_left+min_margin; //日期的起始位
-    for(int i=0;i<6;i++)
-        datePosition+=table_H[i];
-
-    int NO_position = datePosition + table_H[6]+table_H[7]+min_margin;//流水号的起始位置
-    //6，开始绘制
-    //（1）----------标题“送货通知单”
-    //-------------字体
-    QFont font("宋体",22);
-    painter.setFont(font);
-    //-----------------文本
-    painter.drawText(QRect(border_left+table_width/2-Title_WH*5/2,title_up,Text_WH*10,300),"送货通知单",QTextOption());
-
-    //（2）----------流水号
-    //-------------字体
-    QFont font_NO("宋体",9);
-    painter.setFont(font_NO);
-    //-----------------文本
-    painter.drawText(QRect(NO_position,border_up-Text_WH*2-min_margin*2,600,100),lineEdit_number->text(),QTextOption());//"20180210-0008"
-
-    //(3)-----------场地和时间
-    //-------------字体
-    QFont font_Text("宋体",14);
-    painter.setFont(font_Text);
-
-    //-----------------文本
-    painter.drawText(QRect(border_left+min_margin,border_up-Text_WH-min_margin,Text_WH*16,Text_WH),"收货单位： "+combox_place->currentText(),QTextOption());
-    painter.drawText(QRect(datePosition,border_up-Text_WH-min_margin,Text_WH*5,Text_WH),"日期时间：",QTextOption());
-    QFont font_date("宋体",12);
-    painter.setFont(font_date);
-    painter.drawText(QRect(datePosition+Text_WH*4.5,border_up-Text_WH-min_margin,Text_WH*10,Text_WH),getYMDhms(),QTextOption());//"2018-2-10 23:12:59"
-
-
-    //(4)-----------表格信息
-    //字体
-    //QFont font_Text("宋体",14);
-    painter.setFont(font_Text);
-    //绘制表格框架
-    QPen pen;
-    pen.setWidthF(5/PPP);//5
-    painter.setPen(pen);
-
-
-    //------------------绘制水平线
-    int sumV = border_up;
-    for(int i=0;i<4;i++)
-    {
-        painter.drawLine(QPointF(border_left,sumV),QPointF(table_width+border_left,sumV));
-        sumV+=table_V[i];
-    }
-    int sumH=border_left;
-    int Y_1 =border_up+table_V[0]/2-Text_WH/2; //居中调节后，第一行文字所在的实际位置
-    //------------------绘制竖直线
-    for(int i =0;i<10;i++)
-    {
-
-        if(i!=9)//最后一竖线，不需要添加文字
-            painter.drawText(QRect(sumH+table_H[i]/2-Text_WH,Y_1,240,Text_WH),column[i],QTextOption());
-
-        if(i==0||i==9)//表格的左右边界竖线
-        {
-            //V1
-            painter.drawLine(QPointF(sumH,border_up),QPointF(sumH,sumV));
-        }
-        else
-        {
-            //V2 ~ V9
-            painter.drawLine(QPointF(sumH,border_up),QPointF(sumH,sumV-table_V[2]));
-        }
-
-        sumH+=table_H[i];
-    }
-
-    //(5)第二行文字
-    //  QString totalWeight,truckWeight,thingsWeight,price,totalMoney,truckNumber,tips,things_BIG,accepter,driver,watcher;
-
-    int Y_2 =border_up+table_V[0]+table_V[1]/2-Text_WH/2;//居中调节后第二行文字所在的位置
-
-    //水稳碎石
-    int sumHHH=border_left;
-    //painter.drawText(QRect(sumHHH+table_H[0]/2-Text_WH*2,Y_2,480,Text_WH),"水稳碎石",QTextOption());
-    painter.drawText(QRect(sumHHH+table_H[0]/2-Text_WH*strlen(combox_type->currentText().toStdString().c_str())/6,Y_2,480,Text_WH),combox_type->currentText(),QTextOption());
-    //吨
-    sumHHH+=table_H[0];
-    painter.drawText(QRect(sumHHH+table_H[1]/2-Text_WH/2,Y_2,480,Text_WH),"吨",QTextOption());
-    // qDebug()<<"吨"<<strlen("吨");//3
-
-    //毛重
-    sumHHH+=table_H[1];
-    painter.drawText(QRect(sumHHH+table_H[2]/2-Text_WH*strlen(lineEdit_totalWeight->text().toStdString().c_str())/4,Y_2,480,Text_WH),lineEdit_totalWeight->text(),QTextOption());
-    //qDebug()<<strlen(lineEdit_totalWeight->text().toStdString().c_str());
-    //皮重
-    sumHHH+=table_H[2];
-    painter.drawText(QRect(sumHHH+table_H[3]/2-Text_WH*strlen(lineEdit_truckWeight->text().toStdString().c_str())/4,Y_2,480,Text_WH),lineEdit_truckWeight->text(),QTextOption());
-    //净重
-    sumHHH+=table_H[3];
-    painter.drawText(QRect(sumHHH+table_H[4]/2-Text_WH*strlen(lineEdit_thingsWeight->text().toStdString().c_str())/4,Y_2,480,Text_WH),lineEdit_thingsWeight->text(),QTextOption());
-    //单价
-    sumHHH+=table_H[4];
-    painter.drawText(QRect(sumHHH+table_H[5]/2-Text_WH*strlen(lineEdit_price->text().toStdString().c_str())/4,Y_2,480,Text_WH),lineEdit_price->text(),QTextOption());
-
-    //金额
-    sumHHH+=table_H[5];
-    QString money=QString::number(lineEdit_price->text().toDouble()*lineEdit_thingsWeight->text().toDouble());
-    painter.drawText(QRect(sumHHH+table_H[6]/2-Text_WH*strlen(money.toStdString().c_str())/4,Y_2,480,Text_WH),money,QTextOption());
-    //车牌号
-    sumHHH+=table_H[6];
-    painter.drawText(QRect(sumHHH+table_H[7]/2-Text_WH*2,Y_2,480,Text_WH),combox_truck_number->currentText(),QTextOption());
-    //备注
-
-
-    //（6）第三行文字
-    int Y_3 = border_up+table_V[0]+table_V[1]+table_V[2]/2-Text_WH/2;//居中调节后第三行文字所在的位置
-    //净重大写：
-    QString Bigcn="净重大写： "+number_Transfer_BigChinese(lineEdit_thingsWeight->text().toDouble());
-    painter.drawText(QRect(border_left+min_margin,Y_3,table_width-2*min_margin,Text_WH),Bigcn,QTextOption());
-
-
-    //（7）底端文字
-    int Y_4 =  border_up+table_V[0]+table_V[1]+table_V[2]+min_margin*3;//
-    //收货人:
-    if(ckb_receiver->checkState()==Qt::Checked)
-        painter.drawText(QRect(border_left+min_margin,Y_4,8*Text_WH,Text_WH),"收货人："+lineEdit_man_recever->text(),QTextOption());
-    else
-        painter.drawText(QRect(border_left+min_margin,Y_4,8*Text_WH,Text_WH),"收货人：",QTextOption());
-    //驾驶员:
+    pt.watcher = lineEdit_man_watcher->text();
+    pt.recordflag="正常出单";
+    pt.otherinformation=te_otherInformation->toPlainText();
     if(ckb_dirver->checkState()==Qt::Checked)
-        painter.drawText(QRect(border_left+table_width/2-Title_WH*5/2,Y_4,8*Text_WH,Text_WH),"驾驶员："+lineEdit_man_driver->text(),QTextOption());
+        pt.flag_dirver=true;
     else
-        painter.drawText(QRect(border_left+table_width/2-Title_WH*5/2,Y_4,8*Text_WH,Text_WH),"驾驶员：",QTextOption());
-    //过磅员:
+        pt.flag_dirver=false;
+    if(ckb_receiver->checkState()==Qt::Checked)
+        pt.flag_receiver=true;
+    else
+        pt.flag_receiver=false;
     if(ckb_watcher->checkState()==Qt::Checked)
-        painter.drawText(QRect(datePosition+Text_WH*4.5,Y_4,8*Text_WH,Text_WH),"过磅员："+lineEdit_man_watcher->text(),QTextOption());
+        pt.flag_watcher=true;
     else
-        painter.drawText(QRect(datePosition+Text_WH*4.5,Y_4,8*Text_WH,Text_WH),"过磅员：",QTextOption());
-    //(8)右侧票据说明文字
-    QFont font_explain("宋体",9);
-    painter.setFont(font_explain);
-    painter.drawText(QRect(border_left+table_width+min_margin*2+Text_WH*0,border_up+min_margin,explain_WH,explain_WH*12),QString("第一联/存根/白").split("", QString::SkipEmptyParts).join("\n"),QTextOption());
-    painter.drawText(QRect(border_left+table_width+min_margin*2+Text_WH*1,border_up+min_margin,explain_WH,explain_WH*12),QString("第二联/结算/粉").split("", QString::SkipEmptyParts).join("\n"),QTextOption());
-    painter.drawText(QRect(border_left+table_width+min_margin*2+Text_WH*2,border_up+min_margin,explain_WH,explain_WH*12),QString("第三联/客户/蓝").split("", QString::SkipEmptyParts).join("\n"),QTextOption());
-    painter.drawText(QRect(border_left+table_width+min_margin*2+Text_WH*3,border_up+min_margin,explain_WH,explain_WH*12),QString("第四联/运输/黄").split("", QString::SkipEmptyParts).join("\n"),QTextOption());
+        pt.flag_watcher=false;
+    pt.print();//打印，写入数据库，刷新流水号
 
-    painter.end();
-
+    lineEdit_number->setText(readNumberSetting(dateTime));
 
 }
+
+
 
 
 

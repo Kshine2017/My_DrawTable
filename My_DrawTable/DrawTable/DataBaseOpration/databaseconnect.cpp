@@ -41,26 +41,8 @@ void DataBaseConnect::createconnect()                 //创建数据路的连接
                telephone  text\
                );");
     //表3
-    //流水编号，场地，收货人，车牌号，驾驶员，总重，皮重，货物重量，单价，时间，过磅员,原始时间
-    query.exec("create table if not exists tb_record_v2(\
-               number  text primary key not null,\
-               placename  text,\
-               receiver text,\
-               carnumber  text,\
-               dirver text,\
-               totalweight double,\
-               carweight  double,\
-               thingsweight double,\
-               price    double,\
-               ticketTime   text,\
-               originalTime text,\
-               watcher text,\
-               modefyTime text,\
-               modefier text,\
-               record_flag text\
-               );");
-    //在v2的基础上增加了“种类type”
-    query.exec("create table if not exists tb_record_v3(\
+    //流水编号，品类，场地，收货人，车牌号，驾驶员，总重，皮重，货物重量，单价，票据时间，过磅员,原始时间，修改者，修改时间，备注
+    query.exec("create table if not exists tb_record(\
                number  text primary key not null,\
                type text,\
                placename  text,\
@@ -76,11 +58,12 @@ void DataBaseConnect::createconnect()                 //创建数据路的连接
                watcher text,\
                modefyTime text,\
                modefier text,\
-               record_flag text\
+               record_flag text,\
+               otherInformation text\
                );");
 
     //表4 用户表
-    query.exec("create table if not exists tb_user_v2(\
+    query.exec("create table if not exists tb_user(\
                account                  text primary key not null,\
                password                 text not null,\
                name                     text not null,\

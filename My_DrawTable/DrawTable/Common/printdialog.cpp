@@ -1,6 +1,6 @@
 #include "printdialog.h"
 #include <QDebug>
-#include "AnalzyPage/recorddaoimp.h"
+#include "DataBaseOpration/recorddaoimp.h"
 #include <QMessageBox>
 #include "printticket.h"
 #include <QDateTime>
@@ -67,7 +67,14 @@ void PrintDialog::init_lb_le()
     lh_5 = new QHBoxLayout();lh_5->addWidget(lb_price);lh_5->addWidget(le_price);lh_5->addWidget(lb_time);lh_5->addWidget(le_time);
     lh_6 = new QHBoxLayout();lh_6->addWidget(lb_watcher);lh_6->addWidget(le_watcher);lh_6->addWidget(lb_type);lh_6->addWidget(le_type);
 
+    //备注
+    lb_otherinformation = new QLabel(this);
+    lb_otherinformation->setText("备注信息:");
+    te_otherinformation = new QTextEdit(this);
+    te_otherinformation->setPlaceholderText("建议:(英文,数字,符号算半个汉字)\n每行5个汉字\n最多4行。");
 
+
+    //按钮
     btn_print = new QPushButton(this);
     btn_print->setFixedSize(150,40);
     btn_print->setStyleSheet(  "QPushButton{border-image: url(:/picture/printBtn-up.png);}"
@@ -102,6 +109,10 @@ void PrintDialog::init_lb_le()
     lv_all->addLayout(lh_4);
     lv_all->addLayout(lh_5);
     lv_all->addLayout(lh_6);
+    lv_all->addSpacing(10);
+    lv_all->addWidget(lb_otherinformation);
+    lv_all->addWidget(te_otherinformation);
+    lv_all->addSpacing(30);
     lv_all->addWidget(btn_print);
     lv_all->setAlignment(btn_print,Qt::AlignCenter);
     lv_all->addWidget(btn_update);
@@ -159,6 +170,7 @@ void PrintDialog::init_data(QStringList str)
 
     le_watcher->setText(str.at(12));
     le_type->setText(str.at(15));
+    te_otherinformation->setPlainText(str.at(16));
 }
 
 void PrintDialog::slot_delete()
@@ -174,7 +186,7 @@ void PrintDialog::slot_delete()
     {
 
         RecordDaoImp rdi;
-        bool ret = rdi.deleteRecordInfo_v3(number);
+        bool ret = rdi.deleteRecordInfo(number);
         if(ret)
         {
             qDebug()<<"提示：删除成功";
@@ -216,9 +228,11 @@ void PrintDialog::slot_update()
     getCurrent_UserInfo(account,password,name,status);
    // QString watcher = le_watcher->text();
     QString type ="已被修改";// le_type->text();
+    QString otherinformation=te_otherinformation->toPlainText();
+
     //更新
     RecordDaoImp rdi;
-    bool ret = rdi.updateRecordInfo_v3(number,thingstype,placename,receiver,carnumber,dirver,time,name,totalWeight,carweight,thingsweight,price,type);
+    bool ret = rdi.updateRecordInfo(number,thingstype,placename,receiver,carnumber,dirver,time,name,totalWeight,carweight,thingsweight,price,otherinformation,type);
     if(ret)
     {
         qDebug()<<"提示：修改成功";
@@ -250,7 +264,7 @@ void PrintDialog::slot_print()
 
     pt.watcher = le_watcher->text();
     pt.recordflag="丢失补印";
-
+    pt.otherinformation=te_otherinformation->toPlainText();
     if(ckb_dirver->checkState()==Qt::Checked)
         pt.flag_dirver=true;
     else

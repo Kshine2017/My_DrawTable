@@ -2,6 +2,7 @@
 #define FUNCATION_H
 #include <QString>
 #include <QDateTime>
+#include <QFont>
 const QString number_Transfer_BigChinese(const double &Fnumber);
 const QString getYMDhms();
 const QString getNumber();
@@ -19,4 +20,6 @@ void Delay_MSec(unsigned int msec);
 void savePrinterConfig(QString& printerName, int Ldpi, int Rdpi);
 void readPrinterName(QString& printerName);
 float readPrinterDpiRate();
+int getTextRectWidth(QString str,QFont font,int rate = 6);
+int getTextRectHeight(QString str,QFont font,int rate=6);
 #endif // FUNCATION_H

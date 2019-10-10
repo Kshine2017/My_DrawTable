@@ -43,7 +43,7 @@ bool UserDaoImp::insertUserInfo(const QString &account, const QString &password,
     dbhelper->createconnect();
     //------------------------------------------------------------------
     QSqlQuery query;
-    query.prepare("insert into tb_user_v2("
+    query.prepare("insert into tb_user("
                   "account,"
                   "password,"
                   "name,"
@@ -80,7 +80,7 @@ bool UserDaoImp::isOneExist(QString account)
     dbhelper->createconnect();
     //------------------------------------------------------------------
     QSqlQuery query;
-    query.prepare("select * from tb_user_v2 where account = :account;");
+    query.prepare("select * from tb_user where account = :account;");
     query.bindValue(":account",(const QVariant)account);
     bool ret = query.exec();
 
@@ -106,7 +106,7 @@ bool UserDaoImp::updateUserInfo(const QString &account, const QString &password,
     dbhelper->createconnect();
     //------------------------------------------------------------------
     QSqlQuery query;
-    query.prepare("update tb_user_v2 set password = :password, name = :name, status = :status  where account = :account;");
+    query.prepare("update tb_user set password = :password, name = :name, status = :status  where account = :account;");
     query.bindValue(":account",(const QVariant)account);
     query.bindValue(":password",(const QVariant)password);
     query.bindValue(":name",(const QVariant)name);
@@ -132,7 +132,7 @@ bool UserDaoImp::deleteUserInfo(const QString &account)
     dbhelper->createconnect();
     //------------------------------------------------------------------
     QSqlQuery query;
-    query.prepare("delete from tb_user_v2 where account = :account;");
+    query.prepare("delete from tb_user where account = :account;");
     query.bindValue(":account",(const QVariant)account);
 
     bool ret = query.exec();
@@ -155,7 +155,7 @@ bool UserDaoImp::insertUserInfo_admin()
     dbhelper->createconnect();
     //------------------------------------------------------------------
     QSqlQuery query;
-    query.prepare("insert into tb_user_v2("
+    query.prepare("insert into tb_user("
                   "account,"
                   "password,"
                   "name,"
@@ -188,7 +188,7 @@ bool UserDaoImp::check_account_password(QString &account, QString &password)
     dbhelper->createconnect();
     //------------------------------------------------------------------
     QSqlQuery query;
-    query.prepare("select * from tb_user_v2 where account = :account and password = :password;");
+    query.prepare("select * from tb_user where account = :account and password = :password;");
     query.bindValue(":account",(const QVariant)account);
     query.bindValue(":password",(const QVariant)password);
     bool ret = query.exec();
@@ -216,7 +216,7 @@ bool UserDaoImp::getUserInfoByAccount(const QString account, QString &password, 
     dbhelper->createconnect();
     //------------------------------------------------------------------
     QSqlQuery query;
-    query.prepare("select password,name,status from tb_user_v2 where account = :account;");
+    query.prepare("select password,name,status from tb_user where account = :account;");
     query.bindValue(":account",(const QVariant)account);
     bool ret = query.exec();
    //------------------------------------------------------------------
@@ -237,7 +237,7 @@ bool UserDaoImp::getUserInfoByAccount(const QString account, QString &password, 
 }
 
 /*
-    query.exec("create table if not exists tb_user_v2(\
+    query.exec("create table if not exists tb_user(\
                account  text primary key not null,\
                password  text not null,\
                name  text not null,\
@@ -251,7 +251,7 @@ bool UserDaoImp::selectallUserInfo(QSqlQueryModel *model)
     DataBaseConnect* dbhelper = DataBaseConnect::getInstance();
     dbhelper->createconnect();
     //------------------------------------------------------------------
-    model->setQuery("select account,name,create_time,status from tb_user_v2;");
+    model->setQuery("select account,name,create_time,status from tb_user;");
     model->setHeaderData(0, Qt::Orientation::Horizontal, "账号");
     model->setHeaderData(1, Qt::Orientation::Horizontal, "姓名");
     model->setHeaderData(2, Qt::Orientation::Horizontal, "创建时间");

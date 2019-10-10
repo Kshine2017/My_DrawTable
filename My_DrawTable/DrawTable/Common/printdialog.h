@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QTextEdit>
 class PrintDialog : public QDialog
 {
     Q_OBJECT
@@ -53,6 +54,12 @@ public:
     QCheckBox* ckb_dirver;
     QCheckBox* ckb_receiver;
     QCheckBox* ckb_watcher;
+
+
+    //备注
+    QLabel* lb_otherinformation;
+    QTextEdit* te_otherinformation;
+
 
 
     QPushButton* btn_print;

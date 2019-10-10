@@ -10,6 +10,7 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QSqlTableModel>
+#include <QTextEdit>
 class AddPageWindow : public QWidget
 {
     Q_OBJECT
@@ -69,6 +70,10 @@ public:
 
     //界面显示中文大写
     QLabel* label_BigCN;
+
+    //备注输入框
+    QLabel* label_otherInformation;
+    QTextEdit* te_otherInformation;
 
     //收货人
     QLabel* label_man_recever;

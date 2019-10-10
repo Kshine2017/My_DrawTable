@@ -23,12 +23,12 @@ public:
     QString originalTime;
     QString watcher;
     QString recordflag;
-
+    QString otherinformation;//备注信息 20191009
     bool flag_receiver;
     bool flag_dirver;
     bool flag_watcher;
 
-    bool print();
+    bool print();//打印和插入数据库
 
 
 

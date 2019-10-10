@@ -1,12 +1,12 @@
-#include "analzypage_v2.h"
+#include "analzypage.h"
 #include <QDebug>
-#include "../AnalzyPage/recorddaoimp.h"
-#include "HomePage/placeinfodaoimp.h"
-#include "HomePage/carinfodaoimp.h"
-#include "typedaoimp.h"
-#include "printdialog.h"
+#include "DataBaseOpration/recorddaoimp.h"
+#include "DataBaseOpration/placeinfodaoimp.h"
+#include "DataBaseOpration/carinfodaoimp.h"
+#include "DataBaseOpration/typedaoimp.h"
+#include "Common/printdialog.h"
 #include <QHeaderView>
-AnalzyPage_V2::AnalzyPage_V2(QWidget *parent) : QWidget(parent)
+ANALZYPAGE::ANALZYPAGE(QWidget *parent) : QWidget(parent)
 {
     background_pic = new QLabel(this);
     background_pic->setFixedSize(1000/5*4,500);
@@ -32,7 +32,7 @@ AnalzyPage_V2::AnalzyPage_V2(QWidget *parent) : QWidget(parent)
     getTypeDataFromDB();
 }
 
-void AnalzyPage_V2::init_widget1()
+void ANALZYPAGE::init_widget1()
 {
     widget1 = new QWidget(this);widget1->setFixedSize(800,300);
     //背景图片
@@ -53,7 +53,7 @@ void AnalzyPage_V2::init_widget1()
 
 }
 
-void AnalzyPage_V2::init_widget2()
+void ANALZYPAGE::init_widget2()
 {
     widget2 = new QWidget(this);widget2->setFixedSize(800,200);
     QFont font("宋体",16,75);
@@ -167,7 +167,7 @@ void AnalzyPage_V2::init_widget2()
     widget2->setLayout(ly_H_widget2);
 }
 
-void AnalzyPage_V2::getPlaceDataFromDB()
+void ANALZYPAGE::getPlaceDataFromDB()
 {
     qDebug()<<"---刷新下拉框---场地信息";
     QSqlTableModel modellll(this);
@@ -181,7 +181,7 @@ void AnalzyPage_V2::getPlaceDataFromDB()
     }
 }
 
-void AnalzyPage_V2::getCarDataFromDB()
+void ANALZYPAGE::getCarDataFromDB()
 {
     qDebug()<<"---刷新下拉框---汽车信息";
     QSqlTableModel modellll(this);
@@ -195,7 +195,7 @@ void AnalzyPage_V2::getCarDataFromDB()
     }
 }
 
-void AnalzyPage_V2::getTypeDataFromDB()
+void ANALZYPAGE::getTypeDataFromDB()
 {
     qDebug()<<"---刷新下拉框---类型信息";
     //model = new QSqlTableModel(this);
@@ -210,10 +210,10 @@ void AnalzyPage_V2::getTypeDataFromDB()
     }
 }
 
-void AnalzyPage_V2::slot_select_all()
+void ANALZYPAGE::slot_select_all()
 {
     RecordDaoImp op;
-    op.selectallRecordInfo_v3(model);
+    op.selectallRecordInfo(model);
     tableview->setModel(model);
     QString QScar="累计车次：(未查询)";
     QString QSthings="累计净重: (未查询)";
@@ -221,7 +221,7 @@ void AnalzyPage_V2::slot_select_all()
     lb_thingsweight->setText(QSthings);
 }
 
-void AnalzyPage_V2::slot_select()
+void ANALZYPAGE::slot_select()
 {
     qDebug()<<"分析---查询";
     QString dates=dateEdit_S->date().toString("yyyy-MM-dd");
@@ -243,7 +243,7 @@ void AnalzyPage_V2::slot_select()
     QString place=cbx_place->currentText();
     QString car=cbx_car->currentText();
     RecordDaoImp op;
-    op.selectRecordInfo_date_v3(dates,datee,type,place,car,model);
+    op.selectRecordInfo_date(dates,datee,type,place,car,model);
     tableview->setModel(model);
     //---计算数量---------------------------
     double things=0;//total=0,
@@ -265,7 +265,7 @@ void AnalzyPage_V2::slot_select()
     lb_thingsweight->setText(QSthings);
 }
 
-void AnalzyPage_V2::slot_print(QModelIndex index)
+void ANALZYPAGE::slot_print(QModelIndex index)
 {
     qDebug()<<"分析---打印页面";
     int row = index.row();
@@ -279,7 +279,7 @@ void AnalzyPage_V2::slot_print(QModelIndex index)
    connect(pd,SIGNAL(destroyed()),this,SLOT(slot_select_all()));
 }
 
-void AnalzyPage_V2::slot_display()
+void ANALZYPAGE::slot_display()
 {
 /*
 1、显示图表生成图片

@@ -4,7 +4,10 @@
 #include <QMessageBox>
 #include <QDesktopWidget>
 #include <QApplication>
-#include "funcation.h"
+#include "Common/funcation.h"
+#include <QPixmap>
+#include <QPalette>
+#include <QBitmap>
 #define MW_WEIGHT 1000
 #define MW_HEIGHT 500
 
@@ -16,58 +19,44 @@ MainWindow::MainWindow(QWidget *parent) :
     getUserInfo_ini_File();
 
     //主窗口设置
-    setFixedSize(1000,500);
     QDesktopWidget* desktop = QApplication::desktop(); // =qApp->desktop();也可以
-    move((desktop->width() - this->width())/2, (desktop->height() - this->height())/2);
-
+   // move((desktop->width() - this->width())/2, (desktop->height() - this->height())/2);
     //      setWindowFlags(Qt::FramelessWindowHint);//不可调节大小
+    screenWidth= desktop->width();
+    screenHeight=desktop->height()-60;
+    setFixedSize(1000,500);
+    //resize(1000,500);
     //------------------
     Page_flag =0;//初始页面
-
     //-----------------创建背景--------------------
     DockWindow = new QDockWidget(this); //工具条窗口
     DockWindow->setAutoFillBackground(true);//自动填满背景
     DockWindow->setWindowFlags(Qt::FramelessWindowHint);//不可调节大小
     DockWindow->setFeatures(QDockWidget::NoDockWidgetFeatures);//不可移动
+    DockWindow->setFixedWidth(200);
 
-    UserWindow = new QWidget(this); //不继承
+    //用于去除dock的标题栏
+    QWidget* lTitleBar = DockWindow->titleBarWidget();
+    QWidget* lEmptyWidget = new QWidget();
+    DockWindow->setTitleBarWidget(lEmptyWidget);
+    delete lTitleBar;
+
+    //停靠窗口dock的背景图片
+    QPixmap pix_tool;
+    pix_tool.load(":/picture/toolbar.png");
+    QPalette bgPalette;
+    bgPalette.setBrush(QPalette::Background,pix_tool);
+    DockWindow->setPalette(bgPalette);
+
+
+
+    UserWindow = new QWidget(this);
     UserWindow->setAutoFillBackground(true);
     UserWindow->setWindowFlags(Qt::FramelessWindowHint);
 
-    //主界面的子界面布局
-
-    DockWindow->setFixedSize(MW_WEIGHT/5,MW_HEIGHT);
-    UserWindow->setFixedSize(MW_WEIGHT/5*4,MW_HEIGHT);
-    QPalette UserWindow_palette;
-    QPixmap UserWindow_pixmap(":/picture/mainwindow/toolwidgetBackground.png");
-
-    UserWindow_palette.setBrush(QPalette::Window,QBrush(UserWindow_pixmap));
-    UserWindow->setPalette(UserWindow_palette);
-
-
-    DockWindow->setWidget(UserWindow);
-
-    ////去掉停靠窗口自定义标题栏
-    //        QWidget *tempWidget = new QWidget;
-    //        menuDockWidget->setTitleBarWidget(tempWidget);
-
     //添加一个停靠窗口
-    addDockWidget(Qt::LeftDockWidgetArea,DockWindow);
-
-
-
-
-
-    toolbar_Label_pic =new QLabel(DockWindow);
-    toolbar_Label_pic->setFixedSize(MW_WEIGHT/5,MW_HEIGHT);
-    QPixmap pix_tool;
-    pix_tool.load(":/picture/toolbar.png");
-    pix_tool.scaled(toolbar_Label_pic->size(), Qt::IgnoreAspectRatio);
-    toolbar_Label_pic->setScaledContents(true);
-    toolbar_Label_pic->setPixmap(pix_tool);
-    toolbar_Label_pic->setGeometry(0,0,MW_WEIGHT/5,MW_HEIGHT);
-
-
+    DockWindow->setWidget(UserWindow);
+    this->addDockWidget(Qt::LeftDockWidgetArea,DockWindow);
 
     QMovie *mov =new QMovie(":/picture/backgroundgif.gif");
     background_Label_pic = new QLabel(this);
@@ -95,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+
     qDebug()<<"关机，已释放主窗口对象！";
 }
 
@@ -112,11 +102,6 @@ void MainWindow::Init_connect()
 void MainWindow::Init_button()
 {
     btn_layout =new QVBoxLayout(); //不用继承 否则会爆提示
-    //btn_layout->setMargin(0);//边界距离
-    //btn_layout->setSpacing(0);//弹簧
-    //btn_layout->addSpacing(0);//空白控件
-
-
     //0   一级用户
     //10  二级用户
     //50  权限用户
@@ -320,9 +305,9 @@ void MainWindow::create_QualityPageWindow()
     if(Page_flag!=5)
     {
         Page_flag=5;
-        QualityWindow = new QualityPage(this);
-        QualityWindow->setWindowFlags(Qt::FramelessWindowHint);
-        this->setCentralWidget(QualityWindow);
+//        QualityWindow = new QualityPage(this);
+//        QualityWindow->setWindowFlags(Qt::FramelessWindowHint);
+//        this->setCentralWidget(QualityWindow);
     }
 }
 
@@ -331,9 +316,9 @@ void MainWindow::create_AnalzyPageWindow_V2()
     if(Page_flag!=6)
     {
         Page_flag=6;
-        AnalzyWindow_V2 =new AnalzyPage_V2(this);
-        AnalzyWindow_V2->setWindowFlags(Qt::FramelessWindowHint);
-        this->setCentralWidget(AnalzyWindow_V2);
+        AnalzyWindow =new ANALZYPAGE(this);
+        AnalzyWindow->setWindowFlags(Qt::FramelessWindowHint);
+        this->setCentralWidget(AnalzyWindow);
     }
 }
 void MainWindow::getUserInfo_ini_File()
