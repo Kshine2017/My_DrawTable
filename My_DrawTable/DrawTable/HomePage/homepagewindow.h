@@ -7,6 +7,7 @@
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QGridLayout>
 #include <QComboBox>
 #include <QTextEdit>
 #include <QPrinter>
@@ -34,6 +35,7 @@ public:
 
     QSqlTableModel* model;
     /*布局*/
+    QGridLayout* ly_G_all;
     //竖直布局
     QVBoxLayout* nameLayout_V;//名称
     QVBoxLayout* valueLayout_V;//数值
@@ -128,7 +130,8 @@ public:
 
     QHBoxLayout* layout_ckbH;
     void init_checkbox();
-
+protected:
+    void resizeEvent(QResizeEvent* size);
 
 
 public slots:

@@ -8,22 +8,24 @@
 #include <QHeaderView>
 ANALZYPAGE::ANALZYPAGE(QWidget *parent) : QWidget(parent)
 {
+    setMinimumSize(762, 386);
+    //背景
     background_pic = new QLabel(this);
-    background_pic->setFixedSize(1000/5*4,500);
-//  QPixmap pix_background(":/picture/analzypage_background.jpg");
     QPixmap pix_background(":/picture/lz.jpg");
-    pix_background.scaled(background_pic->size(), Qt::IgnoreAspectRatio);
+
     background_pic->setScaledContents(true);
     background_pic->setPixmap(pix_background);
-    background_pic->setGeometry(0,0,1000/5*4,500);
+
+    background_pic->pixmap()->scaled(this->size(), Qt::IgnoreAspectRatio);
+    background_pic->resize(this->size());
+
 
     init_widget1();
     init_widget2();
     ly_V_all = new QVBoxLayout();
     ly_V_all->addWidget(widget1);
     ly_V_all->addWidget(widget2);
-    ly_V_all->setGeometry(QRect(0,0,800,500));
-
+    setLayout(ly_V_all);
     //------------------
     model = new QSqlQueryModel(widget1);
     slot_select_all();
@@ -34,65 +36,71 @@ ANALZYPAGE::ANALZYPAGE(QWidget *parent) : QWidget(parent)
 
 void ANALZYPAGE::init_widget1()
 {
-    widget1 = new QWidget(this);widget1->setFixedSize(800,300);
+    widget1 = new QWidget(this);
     //背景图片
     table_back_pic = new QLabel(widget1);
-    table_back_pic->setFixedSize(1000/5*4,300);
     QPixmap pix_background(":/picture/table_back_blue.png");
-    pix_background.scaled(table_back_pic->size(), Qt::IgnoreAspectRatio);
     table_back_pic->setScaledContents(true);
     table_back_pic->setPixmap(pix_background);
-    //table_back_pic->setGeometry(0,0,1000/5*4,500);
+    table_back_pic->pixmap()->scaled(widget1->size(), Qt::IgnoreAspectRatio);
+    table_back_pic->resize(widget1->size());
+
+
     //表格
     tableview =new QTableView(widget1);
     tableview->setSelectionBehavior(QAbstractItemView::SelectRows);//选择行
-    //tableview->setStyleSheet("background-color:transparent;");
-    //tableview->verticalHeader()->setStyleSheet("QHeaderView::section {background-color: rgba(232, 255, 213, 5);}");
     connect(tableview,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(slot_print(QModelIndex)));
-    tableview->setGeometry(10,10,780,280);
 
+    QGridLayout* ly_G_table=new QGridLayout();
+    ly_G_table->addWidget(tableview);
+    widget1->setLayout(ly_G_table);
 }
 
 void ANALZYPAGE::init_widget2()
 {
-    widget2 = new QWidget(this);widget2->setFixedSize(800,200);
+    widget2 = new QWidget(this);
+    widget2->setFixedHeight(200);
     QFont font("宋体",16,75);
     QPalette pa;pa.setColor(QPalette::WindowText,Qt::blue);
     //左
     ly_V_Left = new QVBoxLayout();
     lb_time_scale = new QLabel(widget2);
-    lb_time_scale->setFixedSize(200,30);lb_time_scale->setText("时间范围：");//“时间范围”
+    //lb_time_scale->setFixedSize(200,30);
+    lb_time_scale->setText("时间范围：");//“时间范围”
     lb_time_scale->setFont(font);
     lb_time_scale->setPalette(pa);
     //品类
     ly_H_Left1 = new QHBoxLayout();lb_cbx_type = new QLabel(widget2); cbx_type = new QComboBox(widget2);
-    lb_cbx_type->setFixedSize(50,30);lb_cbx_type->setText("品类：");
+    //lb_cbx_type->setFixedSize(50,30);
+    lb_cbx_type->setText("品类：");
     ly_H_Left1->addWidget(lb_cbx_type);ly_H_Left1->addWidget(cbx_type);ly_H_Left1->addStretch();
     lb_cbx_type->setFont(font);
     lb_cbx_type->setPalette(pa);
     cbx_type->setFont(QFont("宋体",13,75));
     cbx_type->setEditable(true);
-    cbx_type->setFixedSize(150,30);
+    //cbx_type->setFixedSize(150,30);
     cbx_type->insertItem(0,"全部");
     //场地
     ly_H_Left2 = new QHBoxLayout();lb_cbx_place = new QLabel(widget2);   cbx_place = new QComboBox(widget2);
-    lb_cbx_place->setFixedSize(50,30);lb_cbx_place->setText("场地：");
+    //lb_cbx_place->setFixedSize(50,30);
+    lb_cbx_place->setText("场地：");
     ly_H_Left2->addWidget(lb_cbx_place);ly_H_Left2->addWidget(cbx_place);ly_H_Left2->addStretch();
     lb_cbx_place->setFont(font);
     lb_cbx_place->setPalette(pa);
     cbx_place->setFont(QFont("宋体",13,75));
     cbx_place->setEditable(true);
-    cbx_place->setFixedSize(150,30);
+    //cbx_place->setFixedSize(150,30);
     cbx_place->insertItem(0,"全部");
     //车辆
     ly_H_Left3 = new QHBoxLayout();lb_cbx_car = new QLabel(widget2);     cbx_car = new QComboBox(widget2);
-    lb_cbx_car->setFixedSize(50,30);lb_cbx_car->setText("车辆：");
+    //lb_cbx_car->setFixedSize(50,30);
+    lb_cbx_car->setText("车辆：");
     ly_H_Left3->addWidget(lb_cbx_car);ly_H_Left3->addWidget(cbx_car);ly_H_Left3->addStretch();
     lb_cbx_car->setFont(font);
     lb_cbx_car->setPalette(pa);
     cbx_car->setFont(QFont("宋体",13,75));
     cbx_car->setEditable(true);
-    cbx_car->setFixedSize(150,30);
+    //cbx_car->setFixedSize(150,30);
     cbx_car->insertItem(0,"全部");
     //起始时间标签//起始日期              //截止时间标签//截止日期
     ly_H_Left4 = new QHBoxLayout();lb_S = new QLabel(widget2);dateEdit_S = new QDateEdit(widget2); lb_E = new QLabel(widget2);dateEdit_E = new QDateEdit(widget2);
@@ -118,7 +126,7 @@ void ANALZYPAGE::init_widget2()
     ly_V_Left->addLayout(ly_H_Left1);
     ly_V_Left->addLayout(ly_H_Left2);
     ly_V_Left->addLayout(ly_H_Left3);
-
+    ly_V_Left->addStretch();
 
     //中
     ly_V_mid = new QVBoxLayout();
@@ -145,26 +153,40 @@ void ANALZYPAGE::init_widget2()
 
     //右
     ly_V_right = new QVBoxLayout();
-    lb_result = new QLabel(widget2);lb_result->setFixedSize(200,30);lb_result->setText("查询结果");//“查询结果”
+    lb_result = new QLabel(widget2);
+    //lb_result->setFixedSize(200,30);
+    lb_result->setText("查询结果");//“查询结果”
     lb_result->setFont(QFont("宋体",13,75));
-    lb_car_times = new QLabel(widget2);lb_car_times->setFixedSize(200,30);lb_car_times->setText("车次：");//车次:
+
+    lb_car_times = new QLabel(widget2);
+    //lb_car_times->setFixedSize(200,30);
+    lb_car_times->setText("车次：");//车次:
     lb_car_times->setFont(QFont("宋体",13,75));
-    //lb_allweight = new QLabel(widget2);lb_allweight->setFixedSize(200,30);lb_allweight->setText("毛重：");//毛重：
-    //lb_allweight->setFont(QFont("宋体",13,75));
-    lb_thingsweight = new QLabel(widget2);lb_thingsweight->setFixedSize(200,30);lb_thingsweight->setText("净重：");//净重：
+
+    lb_thingsweight = new QLabel(widget2);
+    //lb_thingsweight->setFixedSize(200,30);
+    lb_thingsweight->setText("净重：");//净重：
     lb_thingsweight->setFont(QFont("宋体",13,75));
+
     ly_V_right->addWidget(lb_result);
     ly_V_right->addWidget(lb_car_times);
-    //ly_V_right->addWidget(lb_allweight);
     ly_V_right->addWidget(lb_thingsweight);
-
+    ly_V_right->addStretch();
 
     //总
     ly_H_widget2 = new QHBoxLayout();
     ly_H_widget2->addLayout(ly_V_Left);
-    ly_H_widget2->addLayout(ly_V_mid);
     ly_H_widget2->addLayout(ly_V_right);
+    ly_H_widget2->addLayout(ly_V_mid);
+
+    ly_H_widget2->addStretch();
     widget2->setLayout(ly_H_widget2);
+
+
+
+
+
+
 }
 
 void ANALZYPAGE::getPlaceDataFromDB()
@@ -289,4 +311,15 @@ void ANALZYPAGE::slot_display()
 */
 
 
+}
+
+void ANALZYPAGE::resizeEvent(QResizeEvent *size)
+{    Q_UNUSED(size)
+     background_pic->resize(this->size());
+     background_pic->pixmap()->scaled(this->size(), Qt::IgnoreAspectRatio);
+
+      table_back_pic->resize(widget1->size());
+      table_back_pic->pixmap()->scaled(widget1->size(), Qt::IgnoreAspectRatio);
+
+      // qDebug()<<"统计页面"<<this->size();
 }

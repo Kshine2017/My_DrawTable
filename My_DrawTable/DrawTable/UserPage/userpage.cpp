@@ -8,21 +8,25 @@
 #include "setconfig.h"
 UserPage::UserPage(QWidget *parent) : QWidget(parent)
 {
+    setMinimumSize(762, 386);
+
     //背景
     background_pic = new QLabel(this);
-    background_pic->setFixedSize(1000/5*4,500);
-    //QPixmap pix_background(":/picture/homepage_background.jpg");
     QPixmap pix_background(":/picture/pgy.jpg");
 
-    pix_background.scaled(background_pic->size(), Qt::IgnoreAspectRatio);
     background_pic->setScaledContents(true);
     background_pic->setPixmap(pix_background);
-    background_pic->setGeometry(0,0,1000/5*4,500);
+
+    background_pic->pixmap()->scaled(this->size(), Qt::IgnoreAspectRatio);
+    background_pic->resize(this->size());
+
+
+
 
     tableview = new QTableView(this);
     connect(tableview,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(slot_doubleClicked(QModelIndex)));
 
-    tableview->setGeometry(10,10,1000/5*4-20,400-20);
+    //tableview->setGeometry(10,10,1000/5*4-20,400-20);
     tableview->setSelectionBehavior(QAbstractItemView::SelectRows);//选择行
     tableview->setStyleSheet("background-color:transparent;");
     tableview->verticalHeader()->setStyleSheet("QHeaderView::section {background-color: rgba(232, 255, 213, 5);}");
@@ -36,10 +40,11 @@ UserPage::UserPage(QWidget *parent) : QWidget(parent)
 //    mend_MODEL_data();//修改数据
 
     tableview->setModel(querymodel);
-    tableview->setColumnWidth(0,150);
-    tableview->setColumnWidth(1,150);
-    tableview->setColumnWidth(2,300);
-    tableview->setColumnWidth(3,150);
+    tableview->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    //tableview->setColumnWidth(0,150);
+    //tableview->setColumnWidth(1,150);
+    //tableview->setColumnWidth(2,300);
+    //tableview->setColumnWidth(3,150);
 
     //=======================================
     btn_set = new QPushButton(this);
@@ -81,9 +86,19 @@ UserPage::UserPage(QWidget *parent) : QWidget(parent)
     connect(btn_manage,SIGNAL(clicked()),this,SLOT(slot_manage()));
 
     lay_btn = new QHBoxLayout();
-    lay_btn->addWidget(btn_set);lay_btn->addWidget(btn_export);lay_btn->addWidget(btn_import);lay_btn->addWidget(btn_manage);
+    lay_btn->addStretch();
+    lay_btn->addWidget(btn_set);
+    lay_btn->addWidget(btn_export);
+    lay_btn->addWidget(btn_import);
+    lay_btn->addWidget(btn_manage);
+    lay_btn->addSpacing(80);
 
-    lay_btn->setGeometry(QRect(400,tableview->y()/2+tableview->height()/2+230,400,60));//800 500
+    //lay_btn->setGeometry(QRect(400,tableview->y()/2+tableview->height()/2+230,400,60));//800 500
+
+    ly_V_all = new QVBoxLayout();
+    ly_V_all->addWidget(tableview);
+    ly_V_all->addLayout(lay_btn);
+    setLayout(ly_V_all);
 }
 
 UserPage::~UserPage()
@@ -186,6 +201,13 @@ void UserPage::slot_manage()
 
 
 
+}
+
+void UserPage::resizeEvent(QResizeEvent *size)
+{
+    Q_UNUSED(size)
+    background_pic->resize(this->size());
+    background_pic->pixmap()->scaled(this->size(), Qt::IgnoreAspectRatio);
 }
 
 

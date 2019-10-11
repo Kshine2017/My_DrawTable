@@ -14,25 +14,27 @@
 HomePageWindow::HomePageWindow(QWidget *parent) :
     QWidget(parent)
 {
+    setMinimumSize(762, 386);
 
     //背景
     background_pic = new QLabel(this);
-    background_pic->setFixedSize(1000/5*4,500);
-    //QPixmap pix_background(":/picture/homepage_background.jpg");
     QPixmap pix_background(":/picture/cube.jpg");
 
-    pix_background.scaled(background_pic->size(), Qt::IgnoreAspectRatio);
     background_pic->setScaledContents(true);
     background_pic->setPixmap(pix_background);
-    background_pic->setGeometry(0,0,1000/5*4,500);
 
-    //background_pic->
+    background_pic->pixmap()->scaled(this->size(), Qt::IgnoreAspectRatio);
+    background_pic->resize(this->size());
+
 
     //初始化 按钮
     init_Button();
 
     //初始化 标签和输入框
     init_Label_LineEdit();
+
+
+    init_checkbox();
 
     connect_lineEdit();
 
@@ -42,6 +44,66 @@ HomePageWindow::HomePageWindow(QWidget *parent) :
 //    lineEdit_thingsWeight->setText("35.25");
     lineEdit_price->setText("0");
 
+
+
+    //布局
+
+    ly_G_all = new QGridLayout();
+    //上方按钮
+    ly_G_all->setRowMinimumHeight(0,10);
+    ly_G_all->addWidget(btn_print,1,1,1,4);
+    ly_G_all->addWidget(btn_place_maintain,1,7,1,4);
+    ly_G_all->addWidget(btn_Car_maintain,1,13,1,4);
+    ly_G_all->addWidget(btn_Type_maintain,1,19,1,4);
+    //中间
+    ly_G_all->setRowStretch(3,10);
+    ly_G_all->addWidget(label_number,4,1,1,4);
+    ly_G_all->addWidget(label_type,5,1,1,4);
+    ly_G_all->addWidget(label_place,6,1,1,4);
+    ly_G_all->addWidget(label_truck_number,7,1,1,4);
+
+    ly_G_all->addWidget(lineEdit_number,4,5,1,6);
+    ly_G_all->addWidget(combox_type,5,5,1,6);
+    ly_G_all->addWidget(combox_place,6,5,1,6);
+    ly_G_all->addWidget(combox_truck_number,7,5,1,6);
+
+    ly_G_all->addWidget(label_totalWeight,4,13,1,4);
+    ly_G_all->addWidget(label_truckWeight,5,13,1,4);
+    ly_G_all->addWidget(label_thingsWeight,6,13,1,4);
+    ly_G_all->addWidget(label_price,7,13,1,4);
+
+    ly_G_all->addWidget(lineEdit_totalWeight,4,17,1,6);
+    ly_G_all->addWidget(lineEdit_truckWeight,5,17,1,6);ly_G_all->addWidget(btn_saveCar,5,23,1,2);
+    ly_G_all->addWidget(lineEdit_thingsWeight,6,17,1,6);
+    ly_G_all->addWidget(lineEdit_price,7,17,1,6);
+
+    //中文大写
+    ly_G_all->addWidget(label_BigCN,9,1,1,10);
+
+    //备注
+    ly_G_all->setRowStretch(10,10);
+    ly_G_all->addWidget(label_otherInformation,11,1,1,2);
+    ly_G_all->addWidget(te_otherInformation,12,1,2,10,Qt::AlignTop);
+    ly_G_all->setRowStretch(14,30);
+
+    //下方勾选框
+    ly_G_all->addWidget(ckb_receiver,18,1,1,1);
+    ly_G_all->addWidget(label_man_recever,18,2,1,1);
+    ly_G_all->addWidget(lineEdit_man_recever,19,1,1,3);
+
+    ly_G_all->addWidget(ckb_dirver,18,7,1,1);
+    ly_G_all->addWidget(label_man_driver,18,8,1,1);
+    ly_G_all->addWidget(lineEdit_man_driver,19,7,1,3);
+
+    ly_G_all->addWidget(ckb_watcher,18,13,1,1);
+    ly_G_all->addWidget(label_man_watcher,18,14,1,1);
+    ly_G_all->addWidget(lineEdit_man_watcher,19,13,1,3);
+
+
+    ly_G_all->setColumnStretch(25,50);
+
+    setLayout(ly_G_all);
+
     //测试时间格式
     QString tem = getYMDhms();
     qDebug()<<"登录首页的时间："<<tem;
@@ -49,7 +111,7 @@ HomePageWindow::HomePageWindow(QWidget *parent) :
     getPlaceDataFromDB();
     getCarDataFromDB();
     getTypeDataFromDB();
-    init_checkbox();
+
 
 }
 
@@ -63,7 +125,6 @@ void HomePageWindow::init_Button()
                              "QPushButton:hover{border-image: url(:/picture/printBtn-up.png);}"
                              "QPushButton:pressed{border-image: url(:/picture/printBtn-down.png);}");
     btn_print->setFlat(true);
-    btn_print->setGeometry(20,20,150,40);
     connect(btn_print,SIGNAL(clicked()),this,SLOT(slot_print()));
 
     //场地信息维护按钮
@@ -73,7 +134,6 @@ void HomePageWindow::init_Button()
                                       "QPushButton:hover{border-image: url(:/picture/place-up.png);}"
                                       "QPushButton:pressed{border-image: url(:/picture/place-down.png);}");
     btn_place_maintain->setFlat(true);
-    btn_place_maintain->setGeometry(200,20,150,40);
     connect(btn_place_maintain,SIGNAL(clicked()),this,SLOT(slot_createPlaceMaintain()));
 
     //车辆信息维护按钮
@@ -83,7 +143,6 @@ void HomePageWindow::init_Button()
                                     "QPushButton:hover{border-image: url(:/picture/Car-up.png);}"
                                     "QPushButton:pressed{border-image: url(:/picture/Car-down.png);}");
     btn_Car_maintain->setFlat(true);
-    btn_Car_maintain->setGeometry(380,20,150,40);
     connect(btn_Car_maintain,SIGNAL(clicked()),this,SLOT(slot_createCarMaintain()));
 
 
@@ -94,16 +153,13 @@ void HomePageWindow::init_Button()
                                     "QPushButton:hover{border-image: url(:/picture/type-up.png);}"
                                     "QPushButton:pressed{border-image: url(:/picture/type-down.png);}");
     btn_Type_maintain->setFlat(true);
-    btn_Type_maintain->setGeometry(560,20,150,40);
     connect(btn_Type_maintain,SIGNAL(clicked()),this,SLOT(slot_createTypeMaintain()));
-
 
 
     btn_saveCar =new QPushButton(this);
     btn_saveCar->setIcon(QIcon(":/picture/save.png"));
     btn_saveCar->setText("更新入库");
-    //btn_place_maintain->setFixedSize(30,30);
-    btn_saveCar->setGeometry(705,142,80,30);
+    btn_saveCar->setFixedSize(80,30);
     connect(btn_saveCar,SIGNAL(clicked()),this,SLOT(slot_update_carinfo()));
 }
 
@@ -320,10 +376,15 @@ void HomePageWindow::init_checkbox()
                 "QCheckBox::indicator:checked   {image: url(:/picture/checked.png); }"
                 );
 
-    ckb_receiver->setGeometry(label_man_recever->x(),label_man_recever->y(),30,30);
-    ckb_dirver->setGeometry(label_man_driver->x(),label_man_driver->y(),30,30);
-    ckb_watcher->setGeometry(label_man_watcher->x(),label_man_watcher->y(),30,30);
 
+
+}
+
+void HomePageWindow::resizeEvent(QResizeEvent *size)
+{
+    Q_UNUSED(size)
+    background_pic->resize(this->size());
+    background_pic->pixmap()->scaled(this->size(), Qt::IgnoreAspectRatio);
 }
 
 void HomePageWindow::slot_calculate_weight()
@@ -415,30 +476,6 @@ QFont::Black - 87 黑体
     //lineEdit_price->setClearButtonEnabled(true);
     // lineEdit_price->setValidator(new QRegExpValidator(rx,lineEdit_price));
 
-
-    //布局
-    nameLayout_V =new QVBoxLayout;
-    valueLayout_V = new QVBoxLayout;
-    //--------
-    nameLayout_V->addWidget(label_totalWeight);
-    nameLayout_V->addWidget(label_truckWeight);
-    nameLayout_V->addWidget(label_thingsWeight);
-    nameLayout_V->addWidget(label_price);
-    //--------
-    valueLayout_V->addWidget(lineEdit_totalWeight);
-    valueLayout_V->addWidget(lineEdit_truckWeight);
-    valueLayout_V->addWidget(lineEdit_thingsWeight);
-    valueLayout_V->addWidget(lineEdit_price);
-
-    //大布局
-    dataLayout_H = new QHBoxLayout;
-    dataLayout_H->addLayout(nameLayout_V);
-    dataLayout_H->addLayout(valueLayout_V);
-    dataLayout_H->setGeometry(QRect(400,100,300,150));
-
-
-
-
     //======================================第二部分============================================
     //流水号
     label_number = new QLabel(this);
@@ -459,8 +496,6 @@ QFont::Black - 87 黑体
     combox_type->setFixedHeight(30);
     combox_type->setFont(QFont("宋体",13,75));
     combox_type->setEditable(true);
-
-
 
     //场地
     label_place = new QLabel(this);
@@ -502,33 +537,12 @@ QFont::Black - 87 黑体
     //    combox_truck_number->insertItem(1,"苏KMA777");
     //    combox_truck_number->insertItem(2,"苏KMA888");
 
-    //标签 竖直布局
-    left_name_LV = new QVBoxLayout;
-    left_name_LV->addWidget(label_number);
-    left_name_LV->addWidget(label_type);
-    left_name_LV->addWidget(label_place);
-    left_name_LV->addWidget(label_truck_number);
-
-
-    left_value_LV = new QVBoxLayout;
-    left_value_LV->addWidget(lineEdit_number);
-    left_value_LV->addWidget(combox_type);
-    left_value_LV->addWidget(combox_place);
-    left_value_LV->addWidget(combox_truck_number);
-
-
-    Left_LV = new QHBoxLayout;
-    Left_LV->addLayout(left_name_LV);
-    Left_LV->addLayout(left_value_LV);
-    Left_LV->setGeometry(QRect(10,100,300,150));
-
-
-
     //第三部分
 
     label_BigCN = new QLabel(this);
     //label_BigCN->setText("显示净重中文大写");
-    label_BigCN->setGeometry(10,250,400,30);
+
+    //label_BigCN->setFixedSize(400,30);
     //label_BigCN->setFrameShape(QFrame::WinPanel);//用于观测位置
 
     label_otherInformation = new QLabel(this);
@@ -536,8 +550,7 @@ QFont::Black - 87 黑体
     label_otherInformation->setText("备注信息：");
     te_otherInformation=new QTextEdit(this);
     te_otherInformation->setPlaceholderText("建议:(英文,数字,符号算半个汉字)\n每行5个汉字\n最多4行。");
-    label_otherInformation->setGeometry(30,300,100,30);
-    te_otherInformation->setGeometry(30,340,200,50);
+    te_otherInformation->setMaximumHeight(60);
 
     //第四部分 人员信息
     label_man_recever = new QLabel(this);
@@ -581,18 +594,6 @@ QFont::Black - 87 黑体
     lineEdit_man_watcher->setText(name);
 
 
-    man_info_H = new QHBoxLayout;
-    man_info_H->addWidget(label_man_recever);
-    man_info_H->addWidget(lineEdit_man_recever);
-    man_info_H->addSpacing(40);
-    man_info_H->addWidget(label_man_driver);
-    man_info_H->addWidget(lineEdit_man_driver);
-    man_info_H->addSpacing(40);
-    man_info_H->addWidget(label_man_watcher);
-    man_info_H->addWidget(lineEdit_man_watcher);
-    man_info_H->addSpacing(40);
-
-    man_info_H->setGeometry(QRect(10,460,700,30));
 
 
 

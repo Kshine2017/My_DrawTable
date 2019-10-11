@@ -9,6 +9,7 @@
 #include <QSqlTableModel>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 class UserPage : public QWidget
 {
     Q_OBJECT
@@ -27,6 +28,7 @@ public:
     QPushButton* btn_import;//导入
     QPushButton* btn_manage;//管理
     QHBoxLayout* lay_btn;
+    QVBoxLayout* ly_V_all;
     void mend_MODEL_data();
 signals:
 
@@ -40,6 +42,8 @@ public slots:
     void slot_export();
     void slot_import();
     void slot_manage();
+protected:
+    void resizeEvent(QResizeEvent* size);
 };
 
 #endif // USERPAGE_H

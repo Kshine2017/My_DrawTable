@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include "welcompage.h"
 #include "HomePage/homepagewindow.h"
 #include "AnalzyPage/ANALZYPAGE.h"
 #include "AddPage/addpagewindow.h"
@@ -28,6 +29,7 @@ public:
 public slots:
     void slot_quitButton();
     //创建哥功能界面
+    void create_WelcomeWindow();
     void create_HomePageWindow();
     void create_AnalzyPageWindow_V2();
     void create_AddPageWindow();
@@ -37,6 +39,7 @@ private:
    QLabel* toolbar_Label_pic;
    QLabel* background_Label_pic;
    QLabel* Logo_Label_pic;
+   QGridLayout* ly_G_pic;
    QVBoxLayout* ly_V_tool;
 
    QVBoxLayout* btn_layout;
@@ -48,6 +51,7 @@ private:
    QPushButton* userpage_Button;
    QPushButton* quality_Button;
 
+   WelcomPage* welWindow;
    HomePageWindow* HomeWindow;
    //AnalzyPageWindow* AnalzyWindow;
    AddPageWindow* Addwindow;
@@ -74,6 +78,9 @@ private:
 
     int screenWidth;//屏幕宽度
     int screenHeight;//屏幕高度
+protected:
+    void resizeEvent(QResizeEvent* size);
+
 
 };
 

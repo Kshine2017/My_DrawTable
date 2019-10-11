@@ -27,8 +27,12 @@ SetConfig::SetConfig(QWidget *parent)
     cmbx = new QComboBox(this);
     cmbx->setFixedHeight(30);
     cmbx->setFont(QFont("宋体",22));
+    //打印机列表
     cmbx->insertItem(0,"EPson LQ-635KII(360x180dpi)");
     cmbx->insertItem(1,"PDF(600x600dpi)");
+
+
+
     connect(cmbx,SIGNAL(currentIndexChanged(int)),this,SLOT(slot_writePrintConfig(int)));
 
     ly_cmbx= new QHBoxLayout();

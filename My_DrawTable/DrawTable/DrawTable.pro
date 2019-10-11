@@ -79,7 +79,8 @@ SOURCES += main.cpp\
     DataBaseOpration/databaseconnect.cpp \
     Common/funcation.cpp \
     Common/printdialog.cpp \
-    Common/printticket.cpp
+    Common/printticket.cpp \
+    welcompage.cpp
 
 HEADERS  += mainwindow.h \
     HomePage/homepagewindow.h \
@@ -108,7 +109,8 @@ HEADERS  += mainwindow.h \
     DataBaseOpration/databaseconnect.h \
     Common/funcation.h \
     Common/printdialog.h \
-    Common/printticket.h
+    Common/printticket.h \
+    welcompage.h
 
 FORMS    +=
 

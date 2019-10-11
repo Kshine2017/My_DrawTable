@@ -65,6 +65,10 @@ public slots:
     void slot_select();
     void slot_print(QModelIndex index);
     void slot_display();
+
+
+protected:
+    void resizeEvent(QResizeEvent* size);
 };
 
 #endif // ANALZYPAGE_H

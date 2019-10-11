@@ -24,8 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //      setWindowFlags(Qt::FramelessWindowHint);//不可调节大小
     screenWidth= desktop->width();
     screenHeight=desktop->height()-60;
-    setFixedSize(1000,500);
-    //resize(1000,500);
+
+    setMinimumSize(966, 386);//初始大小
+    resize(966, 386);
     //------------------
     Page_flag =0;//初始页面
     //-----------------创建背景--------------------
@@ -48,31 +49,20 @@ MainWindow::MainWindow(QWidget *parent) :
     bgPalette.setBrush(QPalette::Background,pix_tool);
     DockWindow->setPalette(bgPalette);
 
-
-
     UserWindow = new QWidget(this);
     UserWindow->setAutoFillBackground(true);
     UserWindow->setWindowFlags(Qt::FramelessWindowHint);
-
     //添加一个停靠窗口
     DockWindow->setWidget(UserWindow);
     this->addDockWidget(Qt::LeftDockWidgetArea,DockWindow);
 
-    QMovie *mov =new QMovie(":/picture/backgroundgif.gif");
-    background_Label_pic = new QLabel(this);
-    background_Label_pic->setGeometry(MW_WEIGHT/4-50,0,MW_WEIGHT/5*4,MW_HEIGHT);
-    background_Label_pic->setMovie(mov);
-    mov->setScaledSize(background_Label_pic->size());
-    mov->start();
 
-    Logo_Label_pic =new QLabel(UserWindow);
-    Logo_Label_pic->setFixedSize(32,10);
-    QPixmap pix_logo;
-    pix_logo.load(":/picture/Kshine.png");
-    pix_logo.scaled(Logo_Label_pic->size(), Qt::IgnoreAspectRatio);
-    Logo_Label_pic->setScaledContents(true);
-    Logo_Label_pic->setPixmap(pix_logo);
-    Logo_Label_pic->setGeometry(MW_WEIGHT-40,MW_HEIGHT-15,32,10);
+    welWindow = new WelcomPage(this);
+    setCentralWidget(welWindow);
+
+    //qDebug()<<centralWidget()->size();
+
+
 
     //工具栏按钮----------------------
     Init_button();
@@ -180,21 +170,7 @@ void MainWindow::Init_button()
                                        "QPushButton:pressed{border-image: url(:/picture/userwindow-down.png);}");
         btn_layout->addWidget(userpage_Button);
     }
-#if 0
-         //暂定所有
-        if(user_status == status5)
-            {
-               quality_Button     = new QPushButton(DockWindow);
-               connect(quality_Button,SIGNAL(clicked()),this,SLOT(create_QualityPageWindow()));
-               quality_Button->setFlat(true);
-               quality_Button->setFocusPolicy(Qt::TabFocus);
-               quality_Button->setFixedSize(160,30);//图片的固定大小85 32
-               quality_Button->setStyleSheet("QPushButton{border-image: url(:/picture/Kshine.png);}"
-                                              "QPushButton:hover{border-image: url(:/picture/Kshine.png);}"
-                                              "QPushButton:pressed{border-image: url(:/picture/Kshine.png);}");
-               btn_layout->addWidget(quality_Button);
-           }
-#endif
+
     btn_layout->setGeometry(QRect(20,100,185,250));
 }
 
@@ -234,6 +210,14 @@ void MainWindow::slot_quitButton()
     //Delay_MSec_Suspend(1000);//阻塞式延时
     Delay_MSec(1000);//非阻塞式延时
     this->close();
+}
+
+void MainWindow::create_WelcomeWindow()
+{
+
+
+
+
 }
 
 void MainWindow::create_HomePageWindow()
@@ -327,3 +311,11 @@ void MainWindow::getUserInfo_ini_File()
     getCurrent_UserInfo(account,password,username,user_status);
 
 }
+
+void MainWindow::resizeEvent(QResizeEvent *size)
+{
+   // qDebug()<<"mainWindow"<<this->size();
+
+}
+
+

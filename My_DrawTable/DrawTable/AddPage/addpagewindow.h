@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QDateEdit>
 #include <QHBoxLayout>
+#include <QGridLayout>
 #include <QComboBox>
 #include <QLineEdit>
 #include <QCheckBox>
@@ -93,6 +94,7 @@ public:
     QHBoxLayout* layout_ckbH;
 
     /*布局*/
+    QGridLayout* ly_G_all;
     //竖直布局
     QVBoxLayout* nameLayout_V;//名称
     QVBoxLayout* valueLayout_V;//数值
@@ -127,6 +129,9 @@ public slots:
     //更新临时数据
 //    void slot_update_carinfo();
     void slot_print();
+
+protected:
+    void resizeEvent(QResizeEvent* size);
 };
 
 #endif // ADDPAGEWINDOW_H
