@@ -18,6 +18,7 @@ public:
     QLabel* background_Label_pic;
     QGridLayout* ly_G_all;
     QPushButton* btn_snake;
+    QPushButton* btn_magicTower;
 
 protected:
     void resizeEvent(QResizeEvent* size);
@@ -27,6 +28,7 @@ signals:
 
 public slots:
     void slot_startSnakeGame();
+    void slot_startMagicTower();
 };
 
 #endif // WELCOMPAGE_H

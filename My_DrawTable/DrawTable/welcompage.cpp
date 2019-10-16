@@ -2,6 +2,7 @@
 #include <QMovie>
 #include <QDebug>
 #include "GAME/snake/snakewindow.h"
+
 WelcomPage::WelcomPage(QWidget *parent) : QWidget(parent)
 {
     setMinimumSize(762, 386);
@@ -20,10 +21,17 @@ WelcomPage::WelcomPage(QWidget *parent) : QWidget(parent)
     btn_snake->setText("贪吃蛇");
     connect(btn_snake,SIGNAL(clicked()),this,SLOT(slot_startSnakeGame()));
 
+//    btn_magicTower =  new QPushButton(this);
+//    btn_magicTower->setText("魔塔");
+//    connect(btn_magicTower,SIGNAL(clicked()),this,SLOT(slot_startMagicTower()));
+
+
+
 
     //布局
     ly_G_all = new QGridLayout();
     ly_G_all->addWidget(btn_snake,0,0,Qt::AlignCenter);
+//    ly_G_all->addWidget(btn_magicTower,1,0,Qt::AlignCenter);
     ly_G_all->setColumnStretch(1,10);
     ly_G_all->setRowStretch(10,10);
 
@@ -45,5 +53,11 @@ void WelcomPage::slot_startSnakeGame()
 {
     qDebug()<<"贪吃蛇";
     new SnakeWindow(this);
+
+}
+
+void WelcomPage::slot_startMagicTower()
+{
+    qDebug()<<"魔塔";
 
 }

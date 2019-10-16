@@ -8,8 +8,8 @@ QT       += core gui
 QT       += printsupport #打印
 QT       += sql #数据库
 #QT       += charts  #绘制饼图
-
 QT += axcontainer #excel
+#QT +=multimedia
 DEFINES += QT_DLL
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
