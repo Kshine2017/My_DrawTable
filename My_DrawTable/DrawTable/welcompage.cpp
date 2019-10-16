@@ -1,6 +1,7 @@
 #include "welcompage.h"
 #include <QMovie>
 #include <QDebug>
+#include "GAME/snake/snakewindow.h"
 WelcomPage::WelcomPage(QWidget *parent) : QWidget(parent)
 {
     setMinimumSize(762, 386);
@@ -15,30 +16,34 @@ WelcomPage::WelcomPage(QWidget *parent) : QWidget(parent)
     mov->start();
 
     //组成
-//    lb_Kshine = new QLabel(this);
-//    lb_Kshine->setFixedSize(100,30);
-//    lb_Kshine->setScaledContents(true);
-//    QPixmap pix_logo;
-//    pix_logo.load(":/picture/Kshine.png");
-//    pix_logo.scaled(lb_Kshine->size(), Qt::IgnoreAspectRatio);
-//    lb_Kshine->setPixmap(pix_logo);
-
+    btn_snake = new QPushButton(this);
+    btn_snake->setText("贪吃蛇");
+    connect(btn_snake,SIGNAL(clicked()),this,SLOT(slot_startSnakeGame()));
 
 
     //布局
-    //ly_G_all = new QGridLayout();
-    //ly_G_all->addWidget(lb_Kshine,0,0,Qt::AlignCenter);
+    ly_G_all = new QGridLayout();
+    ly_G_all->addWidget(btn_snake,0,0,Qt::AlignCenter);
+    ly_G_all->setColumnStretch(1,10);
+    ly_G_all->setRowStretch(10,10);
 
-
-    //setLayout(ly_G_all);
+    setLayout(ly_G_all);
     show();
     qDebug()<<this->width()<<this->height();
 }
 
 void WelcomPage::resizeEvent(QResizeEvent *size)
 {
+    Q_UNUSED(size)
     //刷新背景图片
     background_Label_pic->resize(this->size());
     background_Label_pic->movie()->setScaledSize(this->size());
     qDebug()<<"welcome"<<this->size();
+}
+
+void WelcomPage::slot_startSnakeGame()
+{
+    qDebug()<<"贪吃蛇";
+    new SnakeWindow(this);
+
 }

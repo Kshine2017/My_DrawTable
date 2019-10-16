@@ -6,6 +6,7 @@
 #include "DataBaseOpration/typedaoimp.h"
 #include "Common/printdialog.h"
 #include <QHeaderView>
+#include "reportdialog.h"
 ANALZYPAGE::ANALZYPAGE(QWidget *parent) : QWidget(parent)
 {
     setMinimumSize(762, 386);
@@ -309,6 +310,13 @@ void ANALZYPAGE::slot_display()
 从XXXX到XXXX时间内：车牌号出单情况
 
 */
+    new ReportDialog(this);
+
+
+
+
+
+
 
 
 }

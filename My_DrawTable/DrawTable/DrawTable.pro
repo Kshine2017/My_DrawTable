@@ -5,53 +5,25 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT       += printsupport
-QT       += sql
+QT       += printsupport #ÊâìÂç∞
+QT       += sql #Êï∞ÊçÆÂ∫ì
 #QT       += charts  #ÁªòÂà∂È•ºÂõæ
 
-#CONFIG += qwt #20190723
-#CONFIG   += qaxcontainer
-QT += axcontainer
-DEFINES += QT_DLL #QWT_DLL
-
-##LIBS += -L"D:\Qt\Qt5.9.1\5.9.1\mingw53_32\lib" -lqwtd
-##LIBS += -L"D:\Qt\Qt5.9.1\5.9.1\mingw53_32\lib" -lqwt
-##INCLUDEPATH += D:\Qt\Qt5.9.1\5.9.1\mingw53_32\include\QWT
-
-#LIBS += -L"D:\Qt\Qt5.7.0\5.7\mingw53_32\lib" -lqwtd
-#LIBS += -L"D:\Qt\Qt5.7.0\5.7\mingw53_32\lib" -lqwt #20190723
-#LIBS += -L"E:\DrawTable\lib" -lqwt
-#INCLUDEPATH += D:\Qt\Qt5.7.0\5.7\mingw53_32\include\QWT #20190723
-
-#LIBS += -L"D:\Qt\Qt5.9.2\5.9.2\mingw53_32\lib" -lqwtd
-#LIBS += -L"D:\Qt\Qt5.9.2\5.9.2\mingw53_32\lib" -lqwt
-#INCLUDEPATH += D:\Qt\Qt5.9.2\5.9.2\mingw53_32\include\QWT
-
-#LIBS += -L"E:\Qt\Qt5.9.2\5.9.2\mingw53_32\lib" -lqwtd
-#LIBS += -L"E:\Qt\Qt5.9.2\5.9.2\mingw53_32\lib" -lqwt
-#INCLUDEPATH += E:\Qt\Qt5.9.2\5.9.2\mingw53_32\include\QWT
-
-
-#LIBS += -L$$PWD\lib\  -lqwt
-#LIBS += -L$$PWD\lib\  -lqwtd
-#CONFIG(debug,debug|release) {
-# unix|win32: LIBS += -lQtCored4
-# unix|win32: LIBS += -lQtGuid4
-# unix|win32: LIBS += -lQtNetworkd4
-#} else {
-# unix|win32: LIBS += -lQtCore4
-# unix|win32: LIBS += -lQtGui4
-# unix|win32: LIBS += -lQtNetwork4
-#}
+QT += axcontainer #excel
+DEFINES += QT_DLL
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = DrawTable
 TEMPLATE = app
 
-
-
 SOURCES += main.cpp\
+    AnalzyPage/reportdialog.cpp \
+    GAME/snake/food.cpp \
+    GAME/snake/gamecontroller.cpp \
+    GAME/snake/snake.cpp \
+    GAME/snake/snakewindow.cpp \
+    GAME/snake/wall.cpp \
         mainwindow.cpp \
     HomePage/homepagewindow.cpp \
     AddPage/addpagewindow.cpp \
@@ -83,6 +55,13 @@ SOURCES += main.cpp\
     welcompage.cpp
 
 HEADERS  += mainwindow.h \
+    AnalzyPage/reportdialog.h \
+    GAME/snake/constants.h \
+    GAME/snake/food.h \
+    GAME/snake/gamecontroller.h \
+    GAME/snake/snake.h \
+    GAME/snake/snakewindow.h \
+    GAME/snake/wall.h \
     HomePage/homepagewindow.h \
     AddPage/addpagewindow.h \
     HomePage/placemaintainwidget.h \
@@ -116,39 +95,21 @@ FORMS    +=
 
 RESOURCES += \
             pic.qrc
+#------------------------------------------------------------------
+VERSION = 1.1.1.001
+QMAKE_TARGET_COMPANY ="Kshine"
+QMAKE_TARGET_DESCRIPTION ="ÊâìÂç∞ÂçïÊçÆ on Qt5.9/5.13,2019.10.12"
+QMAKE_TARGET_COPYRIGHT = "all rights reserved"
+QMAKE_TARGET_PRODUCT = "ËøêË¥ßÂá∫Âçï"
+#RC_CODEPAGE
+RC_LANG = 0x0004 #‚Äú‰∏≠ÊñáÔºàÁÆÄ‰ΩìÔºâ‚Äù
+RC_ICONS = ico.ico  #Êç¢Áî®Qt 5.13ÂèØ‰ª•Ê≠£Â∏∏
+#------------------------------------------------------------------
+#RC_FILE
+#RES_FILE
 
 
-#RC_FILE += myapp.rc
+#------------------------------------------------------------------
 
-DISTFILES += \
-    lib/qwt.dll \
-    lib/qwtd.dll \
-    AnalzyPage/AnalzyPage.rar \
-    design/03e3417f77dbefa3573a0fc1f622aa58.jpg \
-    design/393047af42fb9a9c5e2b1bb033876043.jpg \
-    design/u=4133702964,4126049183&fm=27&gp=0.jpg \
-    picture/homepage_background - ∏±±æ.jpg \
-    design/Car-down.png \
-    design/Car-up.png \
-    design/down.png \
-    design/finishPng-down.png \
-    design/finishPng-up.png \
-    design/homepage-border.png \
-    design/up.png \
-    design/±Ìµ•.png \
-    design/±Ìµ•2.png \
-    design/“≥√Ê3≤ºæ÷…Ëº∆.png \
-    design/ ◊“≥≤ºæ÷.png \
-    picture/myappico.ico \
-    ico.ico \
-    myappico.ico \
-    config/current_user.ini \
-    config/liushuihao.ini \
-    design/ ˝æ›ø‚.txt \
-    picture/myapp.rc \
-    myapp.rc \
-    picture/homepage_background - ∏±±æ.jpg \
-    picture/homepage_background - ∏±±æ.jpg \
-    picture/homepage_background - ∏±±æ.jpg \
-    picture/homepage_background - ∏±±æ.jpg \
-    picture/homepage_background - ∏±±æ.jpg
+
+

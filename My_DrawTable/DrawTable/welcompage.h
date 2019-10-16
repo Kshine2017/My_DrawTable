@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QGridLayout>
+#include <QPushButton>
 class WelcomPage : public QWidget
 {
     Q_OBJECT
@@ -16,7 +17,7 @@ public:
     QLabel* lb_Kshine;
     QLabel* background_Label_pic;
     QGridLayout* ly_G_all;
-
+    QPushButton* btn_snake;
 
 protected:
     void resizeEvent(QResizeEvent* size);
@@ -25,6 +26,7 @@ protected:
 signals:
 
 public slots:
+    void slot_startSnakeGame();
 };
 
 #endif // WELCOMPAGE_H

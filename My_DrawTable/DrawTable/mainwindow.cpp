@@ -314,6 +314,7 @@ void MainWindow::getUserInfo_ini_File()
 
 void MainWindow::resizeEvent(QResizeEvent *size)
 {
+    Q_UNUSED(size)
    // qDebug()<<"mainWindow"<<this->size();
 
 }
